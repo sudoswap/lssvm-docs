@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Creating A Pair - sudoswap AMM Docs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Creating A Pair";
+    var mkdocs_page_input_path = "create.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> sudoswap AMM Docs</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Creating A Pair</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#pair-types">Pair Types</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pair-parameters">Pair Parameters</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#managing-a-pair">Managing A Pair</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../pricing/">Bonding Curves and Pricing</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../swapping/">Swapping Across Pairs</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">sudoswap AMM Docs</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Creating A Pair</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="creating-a-pair">Creating A Pair</h1>
+<p>New pairs for the sudoswap AMM are created with the <code>LSSVMPairFactory</code>. LPs will call either <code>createPairETH</code> or <code>createPairERC20</code> depending on their token type (i.e. if they wish to utilize ETH or an ERC20). This will deploy a new <code>LSSVMPair</code> contract.</p>
+<p>Each pair has one <code>owner</code> (initially set to be the caller), and multiple pools for the same token and NFT pair can exist, even for the same owner. This is due to each pair having its own potentially different spot price and bonding curve.</p>
+<h3 id="pair-types">Pair Types</h3>
+<p>Each pair can be one of 3 types: Token, NFT, or Trade.</p>
+<p>A Token pair holds either ETH or an ERC20 token and will give a quote for how much it will pay for any NFT in the collection it has been created for.</p>
+<p>An NFT pair holds NFTs and will give a quote for how much it will sell for any NFT it has in its inventory.</p>
+<p>A Trade pair holds both NFTs and tokens, and it will give a quote for both buying and selling, with a spread between the quotes as the LP fee.</p>
+<h3 id="pair-parameters">Pair Parameters</h3>
+<p>During the creation call, LPs supply the following parameters:</p>
+<pre><code>IERC721 _nft, // The ERC721 token side of the pair
+ICurve _bondingCurve, // The bonding curve used to price the pair
+address payable _assetRecipient, // If set to a non-zero address, assets sent to the pair during a swap will be forwarded to this address. NOTE: unavailable for Trade pairs.
+LSSVMPair.PoolType _poolType, // The pair's type (Token, NFT, Trade)
+uint256 _delta, // The bonding curve's parameter (more on this in the Bonding Curve section)
+uint256 _fee, // The spread between buy and sell quotes. NOTE: only for Trade pairs.
+uint256 _spotPrice, // The initial sell quote the pair will return if an NFT is sold into it.
+uint256[] calldata _initialNFTIDs // The list of IDs to transfer from the caller to the pair
+</code></pre>
+<p>For an ERC20 pair, two other parameters are also added:</p>
+<pre><code>ERC20 token // The token to be used for the token side of the pair.
+uint256 initialTokenBalance // The amount of tokens to send into the pair. (The createPairETH call is payable, and msg.value is used instead)
+</code></pre>
+<p>The factory uses a modified minimal proxy pattern to allow deployed pairs to cheaply access certain values the same way that <code>immutable</code> normally works. See <code>LSSVMPairCloner</code> for more technical details.</p>
+<p>As a result, several of the above parameters <em>cannot</em> be changed after a pool is deployed:</p>
+<pre><code>_nft,
+_bondingCurve,
+_poolType,
+token // NOTE: only for ERC20 pairs
+</code></pre>
+<h3 id="managing-a-pair">Managing A Pair</h3>
+<p>The <code>owner</code> of a pair can modify certain parameters to change the pair's pricing and inventory.</p>
+<p>To modify <code>spotPrice</code>, <code>delta</code>, and <code>fee</code>, the <code>owner</code> can call <code>changeSpotPrice</code>, <code>changeDelta</code>, and <code>changeFee</code> (only for Trade pairs).</p>
+<p>To withdraw any NFTs or tokens sent to the pair, the <code>owner</code> can call <code>withdrawERC721</code>, <code>withdrawERC20</code>, and <code>withdrawETH</code> (only for ETH pairs).</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../pricing/" class="btn btn-neutral float-right" title="Bonding Curves and Pricing">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../pricing/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

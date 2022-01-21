@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Bonding Curves and Pricing - sudoswap AMM Docs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Bonding Curves and Pricing";
+    var mkdocs_page_input_path = "pricing.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> sudoswap AMM Docs</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../create/">Creating A Pair</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Bonding Curves and Pricing</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#linear-curve">Linear Curve</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#exponential-curve">Exponential Curve</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#understanding-spot-price">Understanding Spot Price</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pricing-for-multi-swaps">Pricing For Multi-Swaps</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../swapping/">Swapping Across Pairs</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">sudoswap AMM Docs</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Bonding Curves and Pricing</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="bonding-curves-and-pricing">Bonding Curves and Pricing</h1>
+<p>To determine pricing, each <code>LSSVMPair</code> is associated with a specific bonding curve. At present, there are two choices: <code>LinearCurve</code> and <code>ExponentialCurve</code>. Both curves are parameterized by one variable, <code>delta</code>, which is set in the pair itself. More bonding curve contracts can be whitelisted in the future for use with <code>LSSVMPairFactory</code>.</p>
+<p>After a user trades with a pair, the pair consults its bonding curve to determine what its new price should be. </p>
+<p>Technical note: the bonding curves are intended to be pure, i.e. they do not modify the state of pairs that call them. The actual logic for input/output validation and price updating happens in the <code>LSSVMPair</code> contract itself. </p>
+<h3 id="linear-curve">Linear Curve</h3>
+<p>The linear curve performs an additive operation to update the price. <code>delta</code> is assumed to be set properly by the LP to be the same precision of the pair's underlying token.</p>
+<p>If the pair has just sold an NFT by giving out an NFT and receiving tokens, the next price it will quote to sell NFTs at will be <code>delta</code> more. Conversely, if the pair has just bought an NFT by giving out tokens and receiving an NFT, the next price it will quote to purchase NFTs at will be <code>delta</code> less. </p>
+<h3 id="exponential-curve">Exponential Curve</h3>
+<p>The exponential curve performs a multiplicative operation. <code>delta</code> is treated as a multiplier assuming a fixed point system where <code>1e18</code> is 1.</p>
+<p>For example, if <code>delta</code> is <code>1e18 + 1e17</code>, this represents a 10% change in price each time.</p>
+<p>If the pair has just sold an NFT by giving out an NFT and receiving tokens, the next price it will quote to sell NFTs at will be multiplicatively <code>delta</code> more. Conversely, if the pair has just bought an NFT by giving out tokens and receiving an NFT, the next price it will quote to purchase NFTs at will be multiplicatively <code>delta</code> less. </p>
+<h2 id="understanding-spot-price">Understanding Spot Price</h2>
+<p>In addition to modifying <code>delta</code> to change the pair's price reactivity, it is important to understand how the <code>spotPrice</code> variable in <code>LSSVMPair</code> behaves.</p>
+<p>The spot price refers to the instantaneous price of <em>selling</em> 1 NFT <em>to</em> the pair. The instantaneous price of <em>buying</em> 1 NFT <em>from</em> the pair is set to be the <code>spotPrice</code> adjusted upwards by 1 unit of <code>delta</code> with respect to the pair's bonding curve.</p>
+<p>For example, say that we have a Trade <code>LSSVMPair</code> for ETH  with a <code>spotPrice</code> of 1 ETH, and a linear curve with a <code>delta</code> of 0.1 ETH. (Assume <code>fee</code> is 0.) Then a user selling 1 NFT to the pair would receive 1 ETH, whereas a user purchasing 1 NFT from the pair would have to send (1 + 0.1) = 1.1 ETH.</p>
+<p>In other words, the price to purchase an NFT from a pair will always be <code>delta</code> greater (either additively on multiplicatively) than the price to sell an NFT to the pair.</p>
+<p>Pair managers who are manually adjusting <code>spotPrice</code> should keep this in mind.</p>
+<p>(Note that for simplicity, some examples in this documentation may use "spot price" to also refer to the instantaneous buy price.)</p>
+<h2 id="pricing-for-multi-swaps">Pricing For Multi-Swaps</h2>
+<p>If a user buys or sells multiple NFTs in one swap transaction, the <code>spotPrice</code> will update by <code>delta</code> for each NFT bought or sold. </p>
+<p>For example, say that we have a Trade <code>LSSVMPair</code> for ETH  with a <code>spotPrice</code> of 1 ETH, and a linear curve with a <code>delta</code> of 0.1 ETH. (Assume <code>fee</code> is 0.)</p>
+<p>If a user sells 5 NFTs to this pair, they will receive:</p>
+<ul>
+<li>1 ETH for the first NFT</li>
+<li>0.9 ETH for the second NFT</li>
+<li>0.8 ETH for the third NFT</li>
+<li>0.7 ETH for the fourth NFT</li>
+<li>0.6 ETH for the fifth NFT</li>
+</ul>
+<p>At the end of the multi-swap, the new <code>spotPrice</code> will be set to 0.5 ETH.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../swapping/" class="btn btn-neutral float-right" title="Swapping Across Pairs">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../create/" class="btn btn-neutral" title="Creating A Pair"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../create/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../swapping/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

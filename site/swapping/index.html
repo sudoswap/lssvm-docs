@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Swapping Across Pairs - sudoswap AMM Docs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Swapping Across Pairs";
+    var mkdocs_page_input_path = "swapping.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> sudoswap AMM Docs</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../create/">Creating A Pair</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../pricing/">Bonding Curves and Pricing</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Swapping Across Pairs</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#nfttoken-swaps">NFT&lt;&gt;Token Swaps</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#normal-swap">Normal Swap</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#robust-swap">Robust Swap</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#normal-vs-robust-swap">Normal vs Robust Swap</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#nftnft-swaps">NFT&lt;&gt;NFT Swaps</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">sudoswap AMM Docs</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Swapping Across Pairs</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="swapping-across-pairs">Swapping Across Pairs</h1>
+<p>The recommended way to make swaps across various pairs is to use the <code>LSSVMRouter</code>. Users can set allowances for tokens and NFTs once for the router, instead of for each new pool they wish to swap with.</p>
+<p>On the protocol level, the sudoswap AMM does not perform any routing optimization on-chain. Users are expected to know their desired swap paths when calling the router, e.g. via the use of an off-chain indexing service.</p>
+<h2 id="nfttoken-swaps">NFT&lt;&gt;Token Swaps</h2>
+<p>When swapping tokens for NFTs, users can either specify which NFT IDs they want from each pair, or they can ask for any ID from the pair.</p>
+<p>When swapping from NFT to tokens or from tokens to NFTs, the <code>LSSVMRouter</code> has two types of swaps: a Normal Swap and a Robust Swap.</p>
+<h3 id="normal-swap">Normal Swap</h3>
+<p>A Normal Swap is conceptually similar to token-to-token swaps on other DEXs. The user sends the router a maximum input amount or minimum output amount (i.e. allowed slippage), as well as a swap route and a deadline. The router will then swap across the various pairs specified. At the end of all the swaps, the router will total all tokens to be received or sent, and revert if the total is beyond the user's specified slippage.</p>
+<h3 id="robust-swap">Robust Swap</h3>
+<p>In contrast, a Robust Swap does a slippage check <em>per</em> swap pair rather than an <em>aggregate</em> check at the end. If the price for a specified swap pair is past the allowable slippage, the router will silently skip that route and move on to the next one, with no reverts or errors.</p>
+<p>This is intended for situations where the price can move quickly between your transaction submission and execution. </p>
+<h3 id="normal-vs-robust-swap">Normal vs Robust Swap</h3>
+<p>To see the difference between these swap types, consider this example: say there are 2 pairs for NFT and ETH. The first pair has a spot price of 1 ETH and a linear curve with a delta of 0.1 ETH. The second pair has a spot price of 1 ETH and a linear curve with a delta of 1 ETH.</p>
+<p>A user wishes to purchase NFTs, one from each pool for 1 ETH each, with 10% slippage. </p>
+<p>The user submits a swap transaction. Before this transaction is executed, someone else goes and buys 1 NFT from each pool for 1 ETH each.</p>
+<p>The new spot price for the first pair is 1.1 ETH, and for the second pair is 2 ETH.</p>
+<p>If the user had submitted a Normal Swap, they would have sent 2.2 ETH, and the transaction would fail, as they would have sent enough ETH to cover the first swap at the new price of 1.1 ETH, but not enough to cover the second swap at 2 ETH.</p>
+<p>In contrast, if the user had submitted a Robust Swap, the would have also sent 2.2 ETH, but with a per-swap max cost of 1.1 ETH. The router would have enough to cover the first swap at 1.1 ETH. Then, upon seeing the second swap would cost 2 ETH, the router would skip this pair entirely. The transaction would succeed, refunding 1.1 ETH back to the user, as well as sending them the one NFT they purchased for 1.1 ETH.</p>
+<p>Thus, the Robust Swap is generally recommended for a better user experience in higher volatility environments, at the cost of slightly more gas.</p>
+<h2 id="nftnft-swaps">NFT&lt;&gt;NFT Swaps</h2>
+<p>As another added convenience, the <code>LSSVMRouter</code> also supports swapping NFTs for tokens, and then tokens to other NFTs in one transaction.</p>
+<p>Like the token to NFT swap, users can either specify specific NFT IDs from a pair, or ask for any NFT ID.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../pricing/" class="btn btn-neutral" title="Bonding Curves and Pricing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../pricing/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
