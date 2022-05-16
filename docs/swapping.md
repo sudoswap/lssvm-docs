@@ -27,9 +27,9 @@ The user submits a swap transaction. Before this transaction is executed, someon
 
 The new spot price for the first pair is 1.1 ETH, and for the second pair is 2 ETH.
 
-If the user had submitted a Normal Swap, they would have sent 2.2 ETH, and the transaction would fail, as they would have sent enough ETH to cover the first swap at the new price of 1.1 ETH, but not enough to cover the second swap at 2 ETH.
+If the user had submitted a Normal Swap, they would have sent 2.2 ETH (2 ETH + 0.2 ETH to cover the additional 10% slippage), and the transaction would fail, as they would have sent enough ETH to cover the first swap at the new price of 1.1 ETH, but not enough to cover the second swap at 2 ETH.
 
-In contrast, if the user had submitted a Robust Swap, the would have also sent 2.2 ETH, but with a per-swap max cost of 1.1 ETH. The router would have enough to cover the first swap at 1.1 ETH. Then, upon seeing the second swap would cost 2 ETH, the router would skip this pair entirely. The transaction would succeed, refunding 1.1 ETH back to the user, as well as sending them the one NFT they purchased for 1.1 ETH.
+In contrast, if the user had submitted a Robust Swap, they would have also sent 2.2 ETH, but with a *per-swap* max cost of 1.1 ETH. The router would have enough to cover the first swap at 1.1 ETH. Then, upon seeing the second swap would cost 2 ETH, the router would skip this pair entirely. The transaction would succeed, refunding 1.1 ETH back to the user, as well as sending them the one NFT they purchased for 1.1 ETH.
 
 Thus, the Robust Swap is generally recommended for a better user experience in higher volatility environments, at the cost of slightly more gas.
 

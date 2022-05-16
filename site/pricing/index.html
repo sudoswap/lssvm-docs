@@ -72,6 +72,10 @@
                     <li class="toctree-l1"><a class="reference internal" href="../swapping/">Swapping Across Pairs</a>
                     </li>
                 </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../contracts/">Contract Addresses</a>
+                    </li>
+                </ul>
       </div>
     </div>
     </nav>
@@ -106,7 +110,7 @@
             <div class="section">
               
                 <h1 id="bonding-curves-and-pricing">Bonding Curves and Pricing</h1>
-<p>To determine pricing, each <code>LSSVMPair</code> is associated with a specific bonding curve. At present, there are two choices: <code>LinearCurve</code> and <code>ExponentialCurve</code>. Both curves are parameterized by one variable, <code>delta</code>, which is set in the pair itself. More bonding curve contracts can be whitelisted in the future for use with <code>LSSVMPairFactory</code>.</p>
+<p>To determine pricing, each <code>LSSVMPair</code> is associated with a specific bonding curve set by the LP. At present, there are two choices: <code>LinearCurve</code> and <code>ExponentialCurve</code>. Both curves are parameterized by one variable, <code>delta</code>, which is set in the pair itself. More bonding curve contracts can be whitelisted in the future for use with <code>LSSVMPairFactory</code>.</p>
 <p>After a user trades with a pair, the pair consults its bonding curve to determine what its new price should be. </p>
 <p>Technical note: the bonding curves are intended to be pure, i.e. they do not modify the state of pairs that call them. The actual logic for input/output validation and price updating happens in the <code>LSSVMPair</code> contract itself. </p>
 <h3 id="linear-curve">Linear Curve</h3>

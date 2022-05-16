@@ -8,16 +8,23 @@
   
   
   
-  <link rel="shortcut icon" href="/img/favicon.ico">
-  <title>sudoswap AMM Docs</title>
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Contract Addresses - sudoswap AMM Docs</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
-  <link rel="stylesheet" href="/css/theme.css" />
-  <link rel="stylesheet" href="/css/theme_extra.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
   
-  <script src="/js/jquery-2.1.1.min.js" defer></script>
-  <script src="/js/modernizr-2.8.3.min.js" defer></script>
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Contract Addresses";
+    var mkdocs_page_input_path = "contracts.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
 </head>
@@ -30,9 +37,9 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-        <a href="/." class="icon icon-home"> sudoswap AMM Docs</a>
+        <a href=".." class="icon icon-home"> sudoswap AMM Docs</a>
         <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="//search.html" method="get">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
@@ -40,23 +47,25 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="/.">Home</a>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
                     </li>
                 </ul>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="/create/">Creating A Pair</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../create/">Creating A Pair</a>
                     </li>
                 </ul>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="/pricing/">Bonding Curves and Pricing</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../pricing/">Bonding Curves and Pricing</a>
                     </li>
                 </ul>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="/swapping/">Swapping Across Pairs</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../swapping/">Swapping Across Pairs</a>
                     </li>
                 </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="/contracts/">Contract Addresses</a>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Contract Addresses</a>
+    <ul class="current">
+    </ul>
                     </li>
                 </ul>
       </div>
@@ -68,7 +77,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="/.">sudoswap AMM Docs</a>
+        <a href="..">sudoswap AMM Docs</a>
       </nav>
 
       
@@ -76,9 +85,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="/.">Docs</a> &raquo;</li>
+    <li><a href="..">Docs</a> &raquo;</li>
     
+      
     
+    <li>Contract Addresses</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -90,15 +101,27 @@
           <div role="main">
             <div class="section">
               
-
-  <h1 id="404-page-not-found">404</h1>
-
-  <p><strong>Page not found</strong></p>
-
-
+                <h1 id="rinkeby-contract-addresses">Rinkeby Contract Addresses</h1>
+<p>EXPONENTIAL_CURVE: 0xBc6760B11e433D25aAf5c8fCBC6cE99b14aC5D52
+LINEAR_CURVE: 0x3764b9FE584719C4570725A2b5A2485d418A186E
+PAIR_FACTORY: 0xcB1514FE29db064fa595628E0BFFD10cdf998F33
+PAIR_ROUTER: 0x9ABDe410D7BA62fA11EF37984c0Faf2782FE39B5</p>
+<h1 id="mainnet-contract-addresses">Mainnet Contract Addresses</h1>
+<p>EXPONENTIAL_CURVE: 0x432f962D8209781da23fB37b6B59ee15dE7d9841
+LINEAR_CURVE: 0x5B6aC51d9B1CeDE0068a1B26533CAce807f883Ee
+PAIR_FACTORY: 0xb16c1342E617A5B6E4b631EB114483FDB289c0A4
+PAIR_ROUTER: 0x2b2e8cda09bba9660dca5cb6233787738ad68329</p>
+              
             </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../swapping/" class="btn btn-neutral" title="Swapping Across Pairs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -122,13 +145,15 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
+      <span><a href="../swapping/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
     
   </span>
 </div>
-    <script>var base_url = '/';</script>
-    <script src="/js/theme_extra.js" defer></script>
-    <script src="/js/theme.js" defer></script>
-      <script src="/search/main.js" defer></script>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
     <script defer>
         window.onload = function () {
             SphinxRtdTheme.Navigation.enable(true);

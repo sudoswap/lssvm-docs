@@ -4,4 +4,5 @@ nav:
   - Creating A Pair: create.md
   - Bonding Curves and Pricing: pricing.md
   - Swapping Across Pairs: swapping.md 
+  - Contract Addresses: contracts.md
 theme: readthedocs

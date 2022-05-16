@@ -1,6 +1,6 @@
 # Bonding Curves and Pricing
 
-To determine pricing, each `LSSVMPair` is associated with a specific bonding curve. At present, there are two choices: `LinearCurve` and `ExponentialCurve`. Both curves are parameterized by one variable, `delta`, which is set in the pair itself. More bonding curve contracts can be whitelisted in the future for use with `LSSVMPairFactory`.
+To determine pricing, each `LSSVMPair` is associated with a specific bonding curve set by the LP. At present, there are two choices: `LinearCurve` and `ExponentialCurve`. Both curves are parameterized by one variable, `delta`, which is set in the pair itself. More bonding curve contracts can be whitelisted in the future for use with `LSSVMPairFactory`.
 
 After a user trades with a pair, the pair consults its bonding curve to determine what its new price should be. 
 

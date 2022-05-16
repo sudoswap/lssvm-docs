@@ -76,6 +76,10 @@
     </ul>
                     </li>
                 </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../contracts/">Contract Addresses</a>
+                    </li>
+                </ul>
       </div>
     </div>
     </nav>
@@ -125,8 +129,8 @@
 <p>A user wishes to purchase NFTs, one from each pool for 1 ETH each, with 10% slippage. </p>
 <p>The user submits a swap transaction. Before this transaction is executed, someone else goes and buys 1 NFT from each pool for 1 ETH each.</p>
 <p>The new spot price for the first pair is 1.1 ETH, and for the second pair is 2 ETH.</p>
-<p>If the user had submitted a Normal Swap, they would have sent 2.2 ETH, and the transaction would fail, as they would have sent enough ETH to cover the first swap at the new price of 1.1 ETH, but not enough to cover the second swap at 2 ETH.</p>
-<p>In contrast, if the user had submitted a Robust Swap, the would have also sent 2.2 ETH, but with a per-swap max cost of 1.1 ETH. The router would have enough to cover the first swap at 1.1 ETH. Then, upon seeing the second swap would cost 2 ETH, the router would skip this pair entirely. The transaction would succeed, refunding 1.1 ETH back to the user, as well as sending them the one NFT they purchased for 1.1 ETH.</p>
+<p>If the user had submitted a Normal Swap, they would have sent 2.2 ETH (2 ETH + 0.2 ETH to cover the additional 10% slippage), and the transaction would fail, as they would have sent enough ETH to cover the first swap at the new price of 1.1 ETH, but not enough to cover the second swap at 2 ETH.</p>
+<p>In contrast, if the user had submitted a Robust Swap, they would have also sent 2.2 ETH, but with a <em>per-swap</em> max cost of 1.1 ETH. The router would have enough to cover the first swap at 1.1 ETH. Then, upon seeing the second swap would cost 2 ETH, the router would skip this pair entirely. The transaction would succeed, refunding 1.1 ETH back to the user, as well as sending them the one NFT they purchased for 1.1 ETH.</p>
 <p>Thus, the Robust Swap is generally recommended for a better user experience in higher volatility environments, at the cost of slightly more gas.</p>
 <h2 id="nftnft-swaps">NFT&lt;&gt;NFT Swaps</h2>
 <p>As another added convenience, the <code>LSSVMRouter</code> also supports swapping NFTs for tokens, and then tokens to other NFTs in one transaction.</p>
@@ -137,6 +141,8 @@
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../contracts/" class="btn btn-neutral float-right" title="Contract Addresses">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../pricing/" class="btn btn-neutral" title="Bonding Curves and Pricing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -167,6 +173,8 @@
     
       <span><a href="../pricing/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
+    
+      <span><a href="../contracts/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
