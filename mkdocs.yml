@@ -1,6 +1,7 @@
 site_name: sudoswap AMM Docs
 nav:
   - Home: index.md
+  - User Guide: guide.md
   - Creating A Pair: create.md
   - Bonding Curves and Pricing: pricing.md
   - Swapping Across Pairs: swapping.md 
