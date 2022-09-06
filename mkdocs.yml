@@ -13,7 +13,11 @@ nav:
     - Bonding Curves and Pricing: reference/pricing.md
     - Swapping Across Pairs: reference/swapping.md 
     - Contract Addresses: reference/contracts.md
-theme: readthedocs
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
 plugins:
     - search
     - redirects:
