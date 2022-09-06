@@ -1,9 +1,25 @@
 site_name: sudoswap AMM Docs
 nav:
-  - Home: index.md
-  - User Guide: guide.md
-  - Creating A Pair: create.md
-  - Bonding Curves and Pricing: pricing.md
-  - Swapping Across Pairs: swapping.md 
-  - Contract Addresses: contracts.md
+  - What Is Sudoswap?: index.md
+  - User Guide:
+    - 'Buying and Selling NFTs': user-guide/buying-and-selling.md
+    - 'Creating a Liquidity Pool': user-guide/creating-a-pool.md
+    - 'Frequently Asked Questions (FAQ)': user-guide/faq.md
+  - Managing Collections:
+    - 'Launching on Sudoswap': managing-collections/listing.md
+    - 'Frequently Asked Questions (FAQ)': managing-collections/faq.md
+  - Technical Reference:
+    - Pair Creation : reference/pair-creation.md
+    - Bonding Curves and Pricing: reference/pricing.md
+    - Swapping Across Pairs: reference/swapping.md 
+    - Contract Addresses: reference/contracts.md
 theme: readthedocs
+plugins:
+    - search
+    - redirects:
+        redirect_maps:
+            'guide.md': 'user-guide/buying-and-selling.md'
+            'create.md': 'reference/pair-creation.md'
+            'pricing.md': 'reference/pricing.md'
+            'swapping.md': 'reference/swapping.md'
+            'contracts.md': 'reference/contracts.md'
