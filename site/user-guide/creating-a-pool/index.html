@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Creating a Liquidity Pool - sudoswap AMM Docs</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Creating a Liquidity Pool";
+        var mkdocs_page_input_path = "user-guide\\creating-a-pool.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> sudoswap AMM Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">What Is Sudoswap?</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../buying-and-selling/">Buying and Selling NFTs</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Creating a Liquidity Pool</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#buy-nfts-with-eth">Buy NFTs with ETH</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sell-nfts-for-eth">Sell NFTs for ETH</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#trade-nfts-for-eth-buy-and-sell">Trade NFTs for ETH (Buy and Sell)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#other-ways-to-create-a-pool">Other Ways to Create a Pool</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#collection-offers">Collection Offers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#listing-nfts">Listing NFTs</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#managing-existing-pools">Managing Existing Pools</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#updating-pricing">Updating Pricing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#depositing-nfts">Depositing NFTs</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#withdrawing-nfts">Withdrawing NFTs</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions (FAQ)</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Managing Collections</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../managing-collections/listing/">Launching on Sudoswap</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../managing-collections/faq/">Frequently Asked Questions (FAQ)</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Technical Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/pair-creation/">Pair Creation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/pricing/">Bonding Curves and Pricing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/swapping/">Swapping Across Pairs</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/contracts/">Contract Addresses</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">sudoswap AMM Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>User Guide &raquo;</li>
+      <li>Creating a Liquidity Pool</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="creating-a-pool">Creating a Pool</h1>
+<p>Anyone can provide liquidity on sudoswap. You can choose whether you want to buy or sell NFTs across a range of prices, or do both to earn trading fees.</p>
+<p>To create a pool, start by navigating to the <a href="https://sudoswap.xyz/#/pool">Your Pools</a> tab at the top-right of the page. Click on "+ Create New Pool" and follow the instructions below depending on the type of pool you want to create.</p>
+<p><img alt="" src="https://i.imgur.com/258FrrF.jpg" /></p>
+<h2 id="buy-nfts-with-eth">Buy NFTs with ETH</h2>
+<ol>
+<li>Click on the deposit drop-down box and select ETH:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/6efi1G4.jpg" /></p>
+<ol>
+<li>Click on the receive drop-down box and select the NFT collection you want to buy. If you don't see the collection you want to buy, paste the contract address into the search bar, click "Add", and then select the collection.</li>
+<li>Enter the start price you want to pay, choose the type of bonding curve, and enter your chosen delta. If you are only buying one item, choose either type of curve and enter any delta:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/kisv5Nx.jpg" /></p>
+<ol>
+<li>Type in how many NFTs you want to buy and click "Next Step &gt;".</li>
+</ol>
+<p><em>Note: The slider on the right hand side is only for visualization purposes and does not affect your pool.</em> </p>
+<ol>
+<li>Confirm the details of your pool are correct, click "Create Pool", and confirm the transaction in your wallet.</li>
+</ol>
+<h2 id="sell-nfts-for-eth">Sell NFTs for ETH</h2>
+<ol>
+<li>Click on the deposit drop-down box and select the NFT collection you want to sell:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/GxS58xM.jpg" /></p>
+<ol>
+<li>Click on the receive drop-down box and select ETH.</li>
+<li>Enter the start price you want to receive, choose the type of bonding curve, and enter your chosen delta. If you are only selling one item, choose either type of curve and enter any delta:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/aJm6vlF.jpg" /></p>
+<ol>
+<li>Type in how many NFTs you want to sell and click "Next Step &gt;".</li>
+</ol>
+<p><em>Note: The slider on the right hand side is only for visualization purposes and does not affect your pool.</em> </p>
+<ol>
+<li>Confirm the details of your pool are correct and select the NFTs you want to deposit:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/cafdBSw.jpg" /></p>
+<ol>
+<li>Click "Approve" and confirm the transaction in your wallet.</li>
+<li>Click "Create Pool" and confirm the transaction in your wallet.</li>
+</ol>
+<h2 id="trade-nfts-for-eth-buy-and-sell">Trade NFTs for ETH (Buy and Sell)</h2>
+<ol>
+<li>Click on the first drop-down box and select ETH:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/R44JUUv.jpg" /></p>
+<ol>
+<li>Click on the second drop-down box and select the NFT collection you want to deposit.</li>
+<li>Enter the percentage fee you want to take on every trade that uses your pool.</li>
+<li>Enter the start price for the pool, choose the type of bonding curve, and enter your chosen delta:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/LmxrDEu.jpg" /></p>
+<ol>
+<li>Type in how many NFTs you want to buy and sell and click "Next Step &gt;".</li>
+</ol>
+<p><em>Note: The sliders on the right hand side are only for visualization purposes and do not affect your pool.</em> </p>
+<ol>
+<li>Confirm the details of your pool are correct and select the NFTs you want to deposit.</li>
+<li>Click "Approve" and confirm the transaction in your wallet.</li>
+<li>Click "Create Pool" and confirm the transaction in your wallet.</li>
+</ol>
+<h2 id="other-ways-to-create-a-pool">Other Ways to Create a Pool</h2>
+<p>You can also create liquidity pools on sudoswap by making collection offers or listing your NFTs for sale.</p>
+<h3 id="collection-offers">Collection Offers</h3>
+<p>Another way to create a buy pool on sudoswap is by making a collection offer:</p>
+<ol>
+<li>Go to the collections page and select a collection.</li>
+<li>Click "Make Collection Offer" to open the offer manager window:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/A64xnKN.jpg" /></p>
+<ol>
+<li>
+<p>Under "Start Price", enter your desired price. Optionally, if buying multiple NFTs, enter a "Price Decrease" by which the price of all remaining items will be decremented each time an item is sold.</p>
+</li>
+<li>
+<p>Click "Create Offer" and confirm the transaction in your wallet.</p>
+</li>
+</ol>
+<h3 id="listing-nfts">Listing NFTs</h3>
+<p>Another way to create a sell pool on sudoswap is by listing NFTs for sale:</p>
+<ol>
+<li>Navigate to the "Your NFTs" page on the top right.</li>
+<li>Select the NFTs you want to list and click "List NFTs" at the bottom of the page:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/J2HuZtz.jpg" /></p>
+<ol>
+<li>Under "Start Price", enter your desired price. Optionally, if listing multiple NFTs, enter a "Price Increase" by which the price of all remaining items will be incremented each time an item is sold:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/lSxSUWC.jpg" /></p>
+<ol>
+<li>Click "List NFTs".</li>
+<li>Give sudoswap access to the NFTs by confirming the first transaction in your wallet.</li>
+<li>Finalize the listing by confirming the second transaction in your wallet.</li>
+</ol>
+<h2 id="managing-existing-pools">Managing Existing Pools</h2>
+<p>Once you've created a pool, you may wish to update its pricing and deposit or withdraw assets.</p>
+<h3 id="updating-pricing">Updating Pricing</h3>
+<ol>
+<li>Navigate to the <a href="https://sudoswap.xyz/#/pool">Your Pools</a> tab at the top-right of the page"</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/E5O9cv8.jpg" /></p>
+<ol>
+<li>Click on the pool you want to change.</li>
+<li>Click on the "Edit" button at the top-right of the pool:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/yjSBGmv.jpg" /></p>
+<ol>
+<li>Enter a new start price and delta for the pool:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/8mczlxE.jpg" /></p>
+<ol>
+<li>Click "Update" and confirm the transaction in your wallet.</li>
+</ol>
+<p><em>Note: At this time it is not possible to convert a linear pool into an exponential pool or vice versa. To do this, you must withdraw your assets from the existing pool and create a new one.</em></p>
+<h3 id="depositing-nfts">Depositing NFTs</h3>
+<ol>
+<li>Navigate to the <a href="https://sudoswap.xyz/#/pool">Your Pools</a> tab at the top-right of the page.</li>
+<li>Click on the pool you want to deposit to.</li>
+<li>Click on the "Deposit" button at the top-left of the pool.</li>
+<li>Select the NFTs you want to deposit:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/AvlHDZD.jpg" /></p>
+<ol>
+<li>Click "Deposit NFTs" and confirm the transaction in your wallet.</li>
+</ol>
+<h3 id="withdrawing-nfts">Withdrawing NFTs</h3>
+<ol>
+<li>Navigate to the <a href="https://sudoswap.xyz/#/pool">Your Pools</a> tab at the top-right of the page.</li>
+<li>Click on the pool you want to withdrawm from.</li>
+<li>Click on the "Withdraw" button at the top-left of the pool.</li>
+<li>Select the NFTs you want to withdraw:</li>
+</ol>
+<p><img alt="" src="https://i.imgur.com/ERzFkof.jpg" /></p>
+<ol>
+<li>Click "Withdraw NFTs" and confirm the transaction in your wallet.</li>
+</ol>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../buying-and-selling/" class="btn btn-neutral float-left" title="Buying and Selling NFTs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../faq/" class="btn btn-neutral float-right" title="Frequently Asked Questions (FAQ)">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../buying-and-selling/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../faq/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
