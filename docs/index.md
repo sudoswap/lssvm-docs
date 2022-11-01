@@ -1,6 +1,6 @@
 # What Is Sudoswap?
 
-The sudoswap AMM – or just *sudoswap* for short – is a minimal, gas-efficient automated market maker (AMM) protocol that facilitates NFT-to-token swaps (and vice versa) using customizable bonding curves. As of August 2022, sudoswap supports ERC721 NFTs, as well as all ETH and ERC20 tokens.
+The sudoswap AMM – or just *sudoswap* for short – is a minimal, gas-efficient automated market maker (AMM) protocol that facilitates NFT-to-token swaps (and vice versa) using customizable bonding curves. sudoswap supports ERC721 NFTs, as well as all ETH and ERC20 tokens.
 
 Liquidity providers (LPs) can deposit assets into single-sided buy or sell pools, or into dual-sided trade pools which buy *and* sell NFTs with an optional spread to capture trading fees. 
 
@@ -25,7 +25,7 @@ Ideally, a pool contains some amount of both assets, enabling users to swap back
 
 A bonding curve is a mathematical formula which defines the relationship between an asset's price and its supply. Bonding curves are a key feature of automated market makers since they are used to algorithmically adjust asset prices.
 
-At launch, sudoswap supports two types of bonding curve: linear and exponential.
+sudoswap supports three types of bonding curve: linear, exponential, and XYK (constant product).
 
 ### Linear
 
@@ -40,3 +40,11 @@ With an exponential bonding curve, the price of an NFT is increased by a certain
 To calculate the equivalent decrease, convert the the percentage to a decimal index (e.g. for 50%, the index would be 1.5) and divide the price by this number.
 
 For example, a liquidity provider may create an NFT<>ETH pool with a `Start Price` of 2 ETH and a `delta` of 50%. Assuming they provide enough liquidity, the price of an NFT will increase to 2 + 50% = 3 ETH after one item is purchased from the pool. After a second item is purchased, the price will increase to 3 + 50% = 4.5 ETH, and so on and so forth. At any point, if an NFT is sold to the pool, the price will be divided by 1.5.
+
+### XYK (Constant Product)
+
+With an XYK curve, the price of an NFT is adjusted every time an item is bought from or sold to the pool, such that the product of two virtual reserves remains constant after every trade. These virtual reserves correspond to the number and value of NFTs the pool will buy or sell.
+
+An additional concentration parameter allows liquidity providers to adjust (i.e. tighten or loosen) XYK curves.
+
+For information on how exactly pricing is calculated for XYK curves, refer to the [Pricing](https://docs.sudoswap.xyz/reference/pricing/) page in the technical reference.
