@@ -40,7 +40,6 @@ With an exponential bonding curve, the price of an NFT is increased by a certain
 To calculate the equivalent decrease, convert the percentage to a decimal index (e.g. for 50%, the index would be 1.5) and divide the price by this number.
 
 For example, a liquidity provider may create an NFT<>ETH pool with a `Start Price` of 2 ETH and a `delta` of 50%. Assuming they provide enough liquidity, the price of an NFT will increase to 2 + 50% = 3 ETH after one item is purchased from the pool. After a second item is purchased, the price will increase to 3 + 50% = 4.5 ETH, and so on and so forth. At any point, if an NFT is sold to the pool, the price will be divided by 1.5.
-<<<<<<< HEAD
 
 ### XYK (Constant Product)
 
@@ -49,5 +48,3 @@ With an XYK curve, the price of an NFT is adjusted every time an item is bought 
 An additional concentration parameter allows liquidity providers to adjust (i.e. tighten or loosen) XYK curves.
 
 For information on how exactly pricing is calculated for XYK curves, refer to the [Pricing](https://docs.sudoswap.xyz/reference/pricing/) page in the technical reference.
-=======
->>>>>>> omahs-patch-1
