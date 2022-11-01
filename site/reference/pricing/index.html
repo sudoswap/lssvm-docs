@@ -13,7 +13,7 @@
       <script>
         // Current page data
         var mkdocs_page_name = "Bonding Curves and Pricing";
-        var mkdocs_page_input_path = "reference\\pricing.md";
+        var mkdocs_page_input_path = "reference/pricing.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -70,6 +70,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#exponential-curve">Exponential Curve</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#xyk-curve">XYK Curve</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#understanding-spot-price">Understanding Spot Price</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#pricing-for-multi-swaps">Pricing For Multi-Swaps</a>
@@ -106,7 +108,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="bonding-curves-and-pricing">Bonding Curves and Pricing</h1>
-<p>To determine pricing, each <code>LSSVMPair</code> is associated with a specific bonding curve set by the LP. At present, there are two choices: <code>LinearCurve</code> and <code>ExponentialCurve</code>. Both curves are parameterized by one variable, <code>delta</code>, which is set in the pair itself. More bonding curve contracts can be whitelisted in the future for use with <code>LSSVMPairFactory</code>.</p>
+<p>To determine pricing, each <code>LSSVMPair</code> is associated with a specific bonding curve set by the LP. At present, there are three choices: <code>LinearCurve</code>, <code>ExponentialCurve</code>, and <code>XYKCurve</code>. In the future, more bonding curve contracts may be whitelisted for use with <code>LSSVMPairFactory</code>.</p>
 <p>After a user trades with a pair, the pair consults its bonding curve to determine what its new price should be. </p>
 <p>Technical note: the bonding curves are intended to be pure, i.e. they do not modify the state of pairs that call them. The actual logic for input/output validation and price updating happens in the <code>LSSVMPair</code> contract itself. </p>
 <h3 id="linear-curve">Linear Curve</h3>
@@ -116,6 +118,19 @@
 <p>The exponential curve performs a multiplicative operation. <code>delta</code> is treated as a multiplier assuming a fixed point system where <code>1e18</code> is 1.</p>
 <p>For example, if <code>delta</code> is <code>1e18 + 1e17</code>, this represents a 10% change in price each time.</p>
 <p>If the pair has just sold an NFT by giving out an NFT and receiving tokens, the next price it will quote to sell NFTs at will be multiplicatively <code>delta</code> more. Conversely, if the pair has just bought an NFT by giving out tokens and receiving an NFT, the next price it will quote to purchase NFTs at will be multiplicatively <code>delta</code> less. </p>
+<h3 id="xyk-curve">XYK Curve</h3>
+<p>The XYK curve adjusts price such that the product (multiplication) of two virtual reserves remains constant after every trade. At pool creation,the virtual reserves are set as follows:</p>
+<ul>
+<li><code>nftBalance</code>: the number of NFTs being bought or sold (in the case of trade pools, whichever is greater) <strong>plus one</strong></li>
+<li><code>tokenBalance</code>: the number of NFTs being bought or sold (or whichever is greater) multiplied by the start price</li>
+</ul>
+<p>To conform to the <code>IPair</code> interface, <code>nftBalance</code> is stored as <code>delta</code> and <code>tokenBalance</code> is stored as <code>spotPrice</code>.</p>
+<p>The net price (exclusive of pool and protocol fees) for an XYK pair to sell <em>X</em> NFTs is <code>inputValueWithoutFee = (x * tokenBalance) / (nftBalance - x)</code>. Conversely, the net price for an XYK pair to buy <em>X</em> NFTs is <code>outputValueWithoutFee = (x * tokenBalance) / (nftBalance + x)</code>.</p>
+<p>Immediately after every trade, the virtual reserves are updated:</p>
+<ul>
+<li>Pair sells: <code>nftBalance = nftBalance - x</code> and <code>tokenBalance = tokenBalance + outputValueWithoutFee</code></li>
+<li>Pair buys: <code>nftBalance = nftBalance + x</code> and <code>tokenBalance = tokenBalance - outputValueWithoutFee</code></li>
+</ul>
 <h2 id="understanding-spot-price">Understanding Spot Price</h2>
 <p>In addition to modifying <code>delta</code> to change the pair's price reactivity, it is important to understand how the <code>spotPrice</code> variable in <code>LSSVMPair</code> behaves.</p>
 <p>The spot price refers to the instantaneous price of <em>selling</em> 1 NFT <em>to</em> the pair. The instantaneous price of <em>buying</em> 1 NFT <em>from</em> the pair is set to be the <code>spotPrice</code> adjusted upwards by 1 unit of <code>delta</code> with respect to the pair's bonding curve.</p>
