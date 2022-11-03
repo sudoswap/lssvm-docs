@@ -51,6 +51,8 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#exponential">Exponential</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#xyk-constant-product">XYK (Constant Product)</a>
+    </li>
         </ul>
     </li>
     </ul>
@@ -107,7 +109,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="what-is-sudoswap">What Is Sudoswap?</h1>
-<p>The sudoswap AMM – or just <em>sudoswap</em> for short – is a minimal, gas-efficient automated market maker (AMM) protocol that facilitates NFT-to-token swaps (and vice versa) using customizable bonding curves. As of August 2022, sudoswap supports ERC721 NFTs, as well as all ETH and ERC20 tokens.</p>
+<p>The sudoswap AMM – or just <em>sudoswap</em> for short – is a minimal, gas-efficient automated market maker (AMM) protocol that facilitates NFT-to-token swaps (and vice versa) using customizable bonding curves. sudoswap supports ERC721 NFTs, as well as all ETH and ERC20 tokens.</p>
 <p>Liquidity providers (LPs) can deposit assets into single-sided buy or sell pools, or into dual-sided trade pools which buy <em>and</em> sell NFTs with an optional spread to capture trading fees. </p>
 <p>Similar to other floor NFT protocols, sudoswap makes no distinction between different ERC721 IDs. Pools that are willing to buy or sell NFTs will return the same price no matter which NFT is sent in or out from the collection.</p>
 <h2 id="how-does-sudoswap-work">How Does Sudoswap Work?</h2>
@@ -115,20 +117,24 @@
 <p>Here's how it works:
 1. Liquidity providers deposit NFTs and/or ETH (or an ERC20 token) into liquidity pools. They choose whether they would like to buy or sell NFTs (or both) and specify a starting price and bonding curve parameters.
 2. Users can then buy NFTs from or sell NFTs into these pools. Every time an item is bought or sold, the price to buy or sell another item changes for the pool based on its bonding curve.
-3. At any time, liqudity providers can change the parameters of their pool or withdraw assets.</p>
+3. At any time, liquidity providers can change the parameters of their pool or withdraw assets.</p>
 <h2 id="what-is-a-liquidity-pool">What Is A Liquidity Pool?</h2>
 <p>A pool, or liquidity pool, is a smart contract that allows you to instantly swap between two assets. On sudoswap, the most common type of pool is an NFT&lt;&gt;ETH pool, which means that anyone holding NFTs from that collection can instantly swap them for ETH, or vice versa.</p>
 <p>Pools use a bonding curve to determine the relative price at which one asset is traded for another. The more an asset is bought from the pool, the more expensive it becomes. Conversely, the more an asset is sold to the pool, the cheaper it becomes.</p>
 <p>Ideally, a pool contains some amount of both assets, enabling users to swap back and forth between them. However, it's also possible to create a pool with just one asset, meaning that users will only be able to buy that asset from the pool.</p>
 <p>A bonding curve is a mathematical formula which defines the relationship between an asset's price and its supply. Bonding curves are a key feature of automated market makers since they are used to algorithmically adjust asset prices.</p>
-<p>At launch, sudoswap supports two types of bonding curve: linear and exponential.</p>
+<p>sudoswap supports three types of bonding curve: linear, exponential, and XYK (constant product).</p>
 <h3 id="linear">Linear</h3>
 <p>With a linear bonding curve, the price of an NFT is increased by a flat amount (called <code>delta</code>) every time an item is bought from the pool. Conversely, the price of the NFT is decreased by that same flat amount every time an item is sold to the pool.</p>
-<p>For example, a liqudity provider may create an NFT&lt;&gt;ETH pool with a <code>Start Price</code> of 1 ETH and a <code>delta</code> of 0.1 ETH. Assuming they provide enough liquidity, the price of an NFT will increase to 1.1 ETH after one item is purchased from the pool. After a second item is purchased, the price will increase to 1.2 ETH, and so on and so forth. At any point, if an NFT is sold to the pool, the price will decrease by 0.1 ETH.</p>
+<p>For example, a liquidity provider may create an NFT&lt;&gt;ETH pool with a <code>Start Price</code> of 1 ETH and a <code>delta</code> of 0.1 ETH. Assuming they provide enough liquidity, the price of an NFT will increase to 1.1 ETH after one item is purchased from the pool. After a second item is purchased, the price will increase to 1.2 ETH, and so on and so forth. At any point, if an NFT is sold to the pool, the price will decrease by 0.1 ETH.</p>
 <h3 id="exponential">Exponential</h3>
 <p>With an exponential bonding curve, the price of an NFT is increased by a certain percentage (also called <code>delta</code>) every time an item is bought from the pool. Conversely, the price of the NFT is decreased equivalently every time an item is sold to the pool.</p>
-<p>To calculate the equivalent decrease, convert the the percentage to a decimal index (e.g. for 50%, the index would be 1.5) and divide the price by this number.</p>
+<p>To calculate the equivalent decrease, convert the percentage to a decimal index (e.g. for 50%, the index would be 1.5) and divide the price by this number.</p>
 <p>For example, a liquidity provider may create an NFT&lt;&gt;ETH pool with a <code>Start Price</code> of 2 ETH and a <code>delta</code> of 50%. Assuming they provide enough liquidity, the price of an NFT will increase to 2 + 50% = 3 ETH after one item is purchased from the pool. After a second item is purchased, the price will increase to 3 + 50% = 4.5 ETH, and so on and so forth. At any point, if an NFT is sold to the pool, the price will be divided by 1.5.</p>
+<h3 id="xyk-constant-product">XYK (Constant Product)</h3>
+<p>With an XYK curve, the price of an NFT is adjusted every time an item is bought from or sold to the pool, such that the product of two virtual reserves remains constant after every trade. These virtual reserves correspond to the number and value of NFTs the pool will buy or sell.</p>
+<p>An additional concentration parameter allows liquidity providers to adjust (i.e. tighten or loosen) XYK curves.</p>
+<p>For information on how exactly pricing is calculated for XYK curves, refer to the <a href="https://docs.sudoswap.xyz/reference/pricing/">Pricing</a> page in the technical reference.</p>
               
             </div>
           </div><footer>
@@ -176,5 +182,5 @@
 
 <!--
 MkDocs version : 1.3.1
-Build Date UTC : 2022-09-06 11:01:16.116732+00:00
+Build Date UTC : 2022-11-01 18:43:52.506735+00:00
 -->

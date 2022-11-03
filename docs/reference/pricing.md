@@ -1,6 +1,6 @@
 # Bonding Curves and Pricing
 
-To determine pricing, each `LSSVMPair` is associated with a specific bonding curve set by the LP. At present, there are two choices: `LinearCurve` and `ExponentialCurve`. Both curves are parameterized by one variable, `delta`, which is set in the pair itself. More bonding curve contracts can be whitelisted in the future for use with `LSSVMPairFactory`.
+To determine pricing, each `LSSVMPair` is associated with a specific bonding curve set by the LP. At present, there are three choices: `LinearCurve`, `ExponentialCurve`, and `XYKCurve`. In the future, more bonding curve contracts may be whitelisted for use with `LSSVMPairFactory`.
 
 After a user trades with a pair, the pair consults its bonding curve to determine what its new price should be. 
 
@@ -17,6 +17,21 @@ The exponential curve performs a multiplicative operation. `delta` is treated as
 For example, if `delta` is `1e18 + 1e17`, this represents a 10% change in price each time.
 
 If the pair has just sold an NFT by giving out an NFT and receiving tokens, the next price it will quote to sell NFTs at will be multiplicatively `delta` more. Conversely, if the pair has just bought an NFT by giving out tokens and receiving an NFT, the next price it will quote to purchase NFTs at will be multiplicatively `delta` less. 
+
+### XYK Curve
+The XYK curve adjusts price such that the product (multiplication) of two virtual reserves remains constant after every trade. At pool creation,the virtual reserves are set as follows:
+
+* `nftBalance`: the number of NFTs being bought or sold (in the case of trade pools, whichever is greater) **plus one**
+* `tokenBalance`: the number of NFTs being bought or sold (or whichever is greater) multiplied by the start price
+
+To conform to the `IPair` interface, `nftBalance` is stored as `delta` and `tokenBalance` is stored as `spotPrice`.
+
+The net price (exclusive of pool and protocol fees) for an XYK pair to sell *X* NFTs is `inputValueWithoutFee = (x * tokenBalance) / (nftBalance - x)`. Conversely, the net price for an XYK pair to buy *X* NFTs is `outputValueWithoutFee = (x * tokenBalance) / (nftBalance + x)`.
+
+Immediately after every trade, the virtual reserves are updated:
+
+* Pair sells: `nftBalance = nftBalance - x` and `tokenBalance = tokenBalance + outputValueWithoutFee`
+* Pair buys: `nftBalance = nftBalance + x` and `tokenBalance = tokenBalance - outputValueWithoutFee`
 
 ## Understanding Spot Price
 In addition to modifying `delta` to change the pair's price reactivity, it is important to understand how the `spotPrice` variable in `LSSVMPair` behaves.
