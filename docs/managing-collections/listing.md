@@ -7,6 +7,7 @@ For a collection to show up in the search bar, it must have at least one liquidi
 ## Launching on Sudoswap
 
 There is no special procedure to launch an NFT collection on sudoswap. However, if you'd like to make sudoswap part of your launch, you can:
+
 1. Deploy an NFT smart contract as you would for any other collection.
 2. Mint part or all of the supply to an address you control.
 3. [Create a liquidity pool](https://docs.sudoswap.xyz/user-guide/creating-a-pool.md) on sudoswap with those NFTs.
