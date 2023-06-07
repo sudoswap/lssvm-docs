@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Frequently Asked Questions (FAQ) - sudoswap AMM Docs</title>
+    <title>Royalties - sudoswap AMM Docs</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Frequently Asked Questions (FAQ)";
-        var mkdocs_page_input_path = "managing-collections\\faq.md";
+        var mkdocs_page_name = "Royalties";
+        var mkdocs_page_input_path = "v2\\royalties.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -45,16 +45,22 @@
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Sudoswap v2</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/overview/">Overview</a>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/royalties/">Royalties</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Royalties</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#royalty-engine">Royalty Engine</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#settings">Settings</a>
+    </li>
+    </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/settings/">Settings</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../settings/">Settings</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/properties/">Property Checking</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../properties/">Property Checking</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/erc1155/">ERC1155 NFTs</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../erc1155/">ERC1155 NFTs</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">User Guide</span></p>
@@ -67,14 +73,10 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Managing Collections</span></p>
-              <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../listing/">Launching on Sudoswap</a>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../managing-collections/listing/">Launching on Sudoswap</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Frequently Asked Questions (FAQ)</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#why-isnt-my-collection-showing-in-the-search-bar">Why isn't my collection showing in the search bar?</a>
-    </li>
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../managing-collections/faq/">Frequently Asked Questions (FAQ)</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Technical Reference</span></p>
@@ -102,8 +104,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-          <li>Managing Collections &raquo;</li>
-      <li>Frequently Asked Questions (FAQ)</li>
+          <li>Sudoswap v2 &raquo;</li>
+      <li>Royalties</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -112,16 +114,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
-<p>This page contains some of the most frequently asked questions among NFT collection owners.</p>
-<h3 id="why-isnt-my-collection-showing-in-the-search-bar">Why isn't my collection showing in the search bar?</h3>
-<p>For a collection to show up in the search bar, it must have at least one liquidity pool or past volume on sudoswap. If your collection only recently met this requirement, please allow some time for sudoswap to process this.</p>
+                <h1 id="royalties">Royalties</h1>
+<p>With sudoAMM v2, royalties are enforced on liquidity pools at the contract level. Royalties are automatically enabled for collections implementing the <a href="https://eips.ethereum.org/EIPS/eip-2981">ERC2981 royalty standard</a> as well as collections created with supported marketplaces such as Manifold/Foundation, Rarible, SuperRare, or Zora (limited functionality).</p>
+<p>Additionally, creators can use the shared <a href="https://royaltyregistry.xyz/">Royalty Registry</a> deployed at royaltyregistry.eth to manually override royalties, e.g. for older collections which do not implement ERC2981.</p>
+<h2 id="royalty-engine">Royalty Engine</h2>
+<p>The <code>RoyaltyEngine</code> contract determines the provisional value of royalties due for a swap of given <code>value</code> and the address that should receive them. It is a fork of the <a href="https://github.com/manifoldxyz/royalty-registry-solidity/blob/main/contracts/RoyaltyEngineV1.sol">Royalty Engine</a> created by Manifold as part of the Royalty Registry initiative.</p>
+<p>If a collection implements ERC2981, the <code>RoyaltyEngine</code> retrieves royalty information from the collection contract itself. Failing this, the <code>RoyaltyEngine</code> searches for royalty information against popular marketplace specifications:</p>
+<ul>
+<li>Manifold</li>
+<li>Rarible V1 and V2</li>
+<li>Foundation</li>
+<li>SuperRare</li>
+<li>Zora</li>
+<li>ArtBlocks</li>
+<li>KnownOriginV2</li>
+</ul>
+<p>The <code>RoyaltyEngine</code> also searches for entries in the shared Royalty Registry at royaltyregistry.eth, where creators can manually override royalties.</p>
+<p>Royalty information returned from the engine is used in the <code>_calculateRoyalties</code> function on pair contracts, which is called internally by all swap methods, unless:</p>
+<ul>
+<li>The royalty exceeds the sale price, in which case no royalty is applied</li>
+<li>A Setting is in place for the pool...</li>
+</ul>
+<h2 id="settings">Settings</h2>
+<p>When a <a href="../settings/">Setting</a> is in place for a given pair, the <code>_calculateRoyalties</code> function will overwrite the royalty <em>value</em> returned by the <code>RoyaltyEngine</code> using the <code>getFeeSplitBps</code> view on the Setting contract.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../listing/" class="btn btn-neutral float-left" title="Launching on Sudoswap"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../../reference/pair-creation/" class="btn btn-neutral float-right" title="Pair Creation">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../overview/" class="btn btn-neutral float-left" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../settings/" class="btn btn-neutral float-right" title="Settings">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -144,10 +165,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../listing/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../overview/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../../reference/pair-creation/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../settings/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

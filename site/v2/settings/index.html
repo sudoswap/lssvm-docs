@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Frequently Asked Questions (FAQ) - sudoswap AMM Docs</title>
+    <title>Settings - sudoswap AMM Docs</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Frequently Asked Questions (FAQ)";
-        var mkdocs_page_input_path = "managing-collections\\faq.md";
+        var mkdocs_page_name = "Settings";
+        var mkdocs_page_input_path = "v2\\settings.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -45,16 +45,24 @@
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Sudoswap v2</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/overview/">Overview</a>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/royalties/">Royalties</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../royalties/">Royalties</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/settings/">Settings</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Settings</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#standard-settings">Standard Settings</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#fee-splitter">Fee Splitter</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/properties/">Property Checking</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../properties/">Property Checking</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/erc1155/">ERC1155 NFTs</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../erc1155/">ERC1155 NFTs</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">User Guide</span></p>
@@ -67,14 +75,10 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Managing Collections</span></p>
-              <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../listing/">Launching on Sudoswap</a>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../managing-collections/listing/">Launching on Sudoswap</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Frequently Asked Questions (FAQ)</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#why-isnt-my-collection-showing-in-the-search-bar">Why isn't my collection showing in the search bar?</a>
-    </li>
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../managing-collections/faq/">Frequently Asked Questions (FAQ)</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Technical Reference</span></p>
@@ -102,8 +106,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-          <li>Managing Collections &raquo;</li>
-      <li>Frequently Asked Questions (FAQ)</li>
+          <li>Sudoswap v2 &raquo;</li>
+      <li>Settings</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -112,16 +116,51 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
-<p>This page contains some of the most frequently asked questions among NFT collection owners.</p>
-<h3 id="why-isnt-my-collection-showing-in-the-search-bar">Why isn't my collection showing in the search bar?</h3>
-<p>For a collection to show up in the search bar, it must have at least one liquidity pool or past volume on sudoswap. If your collection only recently met this requirement, please allow some time for sudoswap to process this.</p>
+                <h1 id="settings">Settings</h1>
+<p>New in sudoAMM v2, Settings are opt-in contracts that allow creators to waive (partially or entirely) royalties for liquidity pools that meet their chosen criteria, such as a 90-day lockup period or 50:50 trading fee split.</p>
+<p>Creators can develop Settings using the logic of their choosing, but the resulting contract should conform to the <code>ISettings.sol</code> interface:</p>
+<pre><code class="language-sol">interface ISettings {
+    struct PairInfo {
+        address prevOwner;
+        uint96 unlockTime;
+        address prevFeeRecipient;
+    }
+
+    function getFeeSplitBps() external pure returns (uint64);
+
+    function getRoyaltyInfo(address pairAddress) external view returns (bool, uint96);
+
+    function settingsFeeRecipient() external returns (address payable);
+
+    function getPrevFeeRecipientForPair(address pairAddress) external returns (address);
+}
+
+</code></pre>
+<p>Once a Setting has been deployed, the creator of the relevant NFT collection should call <code>toggleSettingsForCollection</code> on the Pair Factory to ratify the Setting, thus waiving royalties for pools enrolled in that Settings.</p>
+<p>To enroll in a Setting, liquidity providers transfer ownership of their pool to the Setting contract using the <code>transferOwnership</code> method on the pool contract. Creators should design Settings such that only pools which meet the desired criteria can be transferred to the Setting contract.</p>
+<h2 id="standard-settings">Standard Settings</h2>
+<p>A Standard Setting is a standardized type of Setting with three criteria:</p>
+<ul>
+<li><code>ethCost</code>, an upfront fee to the liquidity provider in gwei</li>
+<li><code>secDuration</code>, a lockup period in seconds</li>
+<li><code>feeSplitBps</code>, a trading fee split in basis points</li>
+</ul>
+<p>Any liquidity provider who accepts these criteria can participate in the Setting. Following the lockup period, the liquidity provider can call <code>reclaimPair</code> on the Setting contract to withdraw their pool from the Setting.</p>
+<p>Creators can deploy Standard Settings without writing any code by using the <code>createSettings</code> method on the <code>StandardSettingsFactory</code>. In addition to the criteria above, this method takes two parameters:</p>
+<ul>
+<li><code>settingsFeeRecipient</code>, the address which will receive the creator's trading fee split</li>
+<li><code>royaltyBps</code>, the waived royalty rate in basis points</li>
+</ul>
+<h3 id="fee-splitter">Fee Splitter</h3>
+<p>When ownership of a liquidity pool is transferred to a Standard Settings contract, a fee splitter (<code>Splitter.sol</code>) is deployed to handle the distribution of trading fees between the liqudity provider and creator.</p>
+<p>Any address or contract can call the withdrawal methods on the Splitter, such as <code>withdrawETH</code>, to atomically withdraw all accrued fees and split them between the liqudity provider and creator per the <code>feeSplitBps</code>.</p>
+<p>Additionally, Setting owners can call <code>bulkWithdrawFees</code> on a Setting to trigger fee withdrawal from all Fee Splitters deployed under that Setting.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../listing/" class="btn btn-neutral float-left" title="Launching on Sudoswap"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../../reference/pair-creation/" class="btn btn-neutral float-right" title="Pair Creation">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../royalties/" class="btn btn-neutral float-left" title="Royalties"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../properties/" class="btn btn-neutral float-right" title="Property Checking">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -144,10 +183,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../listing/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../royalties/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../../reference/pair-creation/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../properties/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

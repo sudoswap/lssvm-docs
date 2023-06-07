@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Frequently Asked Questions (FAQ) - sudoswap AMM Docs</title>
+    <title>Property Checking - sudoswap AMM Docs</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Frequently Asked Questions (FAQ)";
-        var mkdocs_page_input_path = "managing-collections\\faq.md";
+        var mkdocs_page_name = "Property Checking";
+        var mkdocs_page_input_path = "v2\\properties.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -45,16 +45,26 @@
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Sudoswap v2</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/overview/">Overview</a>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/royalties/">Royalties</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../royalties/">Royalties</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/settings/">Settings</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../settings/">Settings</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/properties/">Property Checking</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Property Checking</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#default-property-checkers">Default Property Checkers</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#rangepropertychecker">RangePropertyChecker</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#merklepropertychecker">MerklePropertyChecker</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../v2/erc1155/">ERC1155 NFTs</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../erc1155/">ERC1155 NFTs</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">User Guide</span></p>
@@ -67,14 +77,10 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Managing Collections</span></p>
-              <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../listing/">Launching on Sudoswap</a>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../managing-collections/listing/">Launching on Sudoswap</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Frequently Asked Questions (FAQ)</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#why-isnt-my-collection-showing-in-the-search-bar">Why isn't my collection showing in the search bar?</a>
-    </li>
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../managing-collections/faq/">Frequently Asked Questions (FAQ)</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Technical Reference</span></p>
@@ -102,8 +108,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-          <li>Managing Collections &raquo;</li>
-      <li>Frequently Asked Questions (FAQ)</li>
+          <li>Sudoswap v2 &raquo;</li>
+      <li>Property Checking</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -112,16 +118,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
-<p>This page contains some of the most frequently asked questions among NFT collection owners.</p>
-<h3 id="why-isnt-my-collection-showing-in-the-search-bar">Why isn't my collection showing in the search bar?</h3>
-<p>For a collection to show up in the search bar, it must have at least one liquidity pool or past volume on sudoswap. If your collection only recently met this requirement, please allow some time for sudoswap to process this.</p>
+                <h1 id="properties">Properties</h1>
+<p>sudoAMM v2 introduces the ability to create property-specific liquidity pools. Properties are enforced at the <code>LSSVMPair</code> level on buy methods, meaning that only NFTs with the specified properties can be sold into pools.</p>
+<p>Property checking logic is contained within dedicated contracts called Property Checkers. Users can develop Property Checkers using the logic of their choosing, but the resulting contracts should conform to the <code>IPropertyChecker.sol</code> interface expected by pair contracts:</p>
+<pre><code class="language-sol">interface IPropertyChecker {
+    function hasProperties(uint256[] calldata ids, bytes calldata params) external returns(bool);
+}
+</code></pre>
+<p>The interface's single method <code>hasProperties</code> takes an array of tokenIds and optional bytes calldata, returning true or false if the specified tokenIds meet the Property Checker's criteria. The optional bytes calldata can be used to pass additional information to the Property Checker, such as proof-of-inclusion in a Merkle tree.</p>
+<p>In order to leverage property checking, liquidity providers must specify a Property Checker when creating pools with the Pair Factory. The Property Checker that is specified for a pool at creation cannot be changed or removed.</p>
+<h2 id="default-property-checkers">Default Property Checkers</h2>
+<p>sudoAMM v2 provides two default Property Checkers which can be cloned by users with custom parameters (immutables):</p>
+<h3 id="rangepropertychecker">RangePropertyChecker</h3>
+<p><code>RangePropertyChecker</code> checks whether tokenIds passed to the <code>hasProperties</code> method lie within a <code>lowerBound</code> and <code>upperBound</code> specified when the contract was cloned.</p>
+<p>For this Property Checker, the optional bytes calldata is not used.</p>
+<h3 id="merklepropertychecker">MerklePropertyChecker</h3>
+<p><code>MerklePropertyChecker</code> checks whether tokenIds passed to the <code>hasProperties</code> method are leaves in an arbitrary Merkle tree whose root was specified when the contract was cloned.</p>
+<p>For this Property Checker, the optional bytes calldata is used by the client to pass a Merkle proof.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../listing/" class="btn btn-neutral float-left" title="Launching on Sudoswap"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../../reference/pair-creation/" class="btn btn-neutral float-right" title="Pair Creation">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../settings/" class="btn btn-neutral float-left" title="Settings"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../erc1155/" class="btn btn-neutral float-right" title="ERC1155 NFTs">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -144,10 +163,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../listing/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../settings/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../../reference/pair-creation/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../erc1155/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

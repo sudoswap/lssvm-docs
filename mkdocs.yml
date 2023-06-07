@@ -1,13 +1,19 @@
 site_name: sudoswap AMM Docs
 nav:
   - What Is Sudoswap?: index.md
+  - Sudoswap v2:
+    - Overview: v2/overview.md
+    - Royalties: v2/royalties.md
+    - Settings: v2/settings.md
+    - Property Checking: v2/properties.md
+    - ERC1155 NFTs: v2/erc1155.md
   - User Guide:
-    - 'Buying and Selling NFTs': user-guide/buying-and-selling.md
-    - 'Creating a Liquidity Pool': user-guide/creating-a-pool.md
-    - 'Frequently Asked Questions (FAQ)': user-guide/faq.md
+    - Buying and Selling NFTs: user-guide/buying-and-selling.md
+    - Creating a Liquidity Pool: user-guide/creating-a-pool.md
+    - Frequently Asked Questions (FAQ): user-guide/faq.md
   - Managing Collections:
-    - 'Launching on Sudoswap': managing-collections/listing.md
-    - 'Frequently Asked Questions (FAQ)': managing-collections/faq.md
+    - Launching on Sudoswap: managing-collections/listing.md
+    - Frequently Asked Questions (FAQ): managing-collections/faq.md
   - Technical Reference:
     - Pair Creation : reference/pair-creation.md
     - Bonding Curves and Pricing: reference/pricing.md

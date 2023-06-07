@@ -44,33 +44,36 @@
                 <li class="toctree-l1"><a class="reference internal" href="../..">What Is Sudoswap?</a>
                 </li>
               </ul>
+              <p class="caption"><span class="caption-text">Sudoswap v2</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../v2/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../v2/royalties/">Royalties</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../v2/settings/">Settings</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../v2/properties/">Property Checking</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../v2/erc1155/">ERC1155 NFTs</a>
+                  </li>
+              </ul>
               <p class="caption"><span class="caption-text">User Guide</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../buying-and-selling/">Buying and Selling NFTs</a>
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="./">Creating a Liquidity Pool</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#buy-nfts-with-eth">Buy NFTs with ETH</a>
+    <li class="toctree-l2"><a class="reference internal" href="#trade-pool-buy-and-sell">Trade Pool (Buy and Sell)</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#sell-nfts-for-eth">Sell NFTs for ETH</a>
+    <li class="toctree-l2"><a class="reference internal" href="#buy-only-pool">Buy-Only Pool</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#trade-nfts-for-eth-buy-and-sell">Trade NFTs for ETH (Buy and Sell)</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#other-ways-to-create-a-pool">Other Ways to Create a Pool</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#collection-offers">Collection Offers</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#listing-nfts">Listing NFTs</a>
-    </li>
-        </ul>
+    <li class="toctree-l2"><a class="reference internal" href="#sell-only-pool">Sell-Only Pool</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#managing-existing-pools">Managing Existing Pools</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#updating-pricing">Updating Pricing</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#depositing-nfts">Depositing NFTs</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#withdrawing-nfts">Withdrawing NFTs</a>
+    <li class="toctree-l3"><a class="reference internal" href="#depositing-and-withdrawing">Depositing and Withdrawing</a>
     </li>
         </ul>
     </li>
@@ -123,141 +126,77 @@
               
                 <h1 id="creating-a-pool">Creating a Pool</h1>
 <p>Anyone can provide liquidity on sudoswap. You can choose whether you want to buy or sell NFTs across a range of prices, or do both to earn trading fees.</p>
-<p>To create a pool, start by navigating to the <a href="https://sudoswap.xyz/#/pool">Your Pools</a> tab at the top-right of the page. Click on "+ Create New Pool" and follow the instructions below depending on the type of pool you want to create.</p>
-<p><img alt="" src="https://i.imgur.com/258FrrF.jpg" /></p>
-<h2 id="buy-nfts-with-eth">Buy NFTs with ETH</h2>
+<p>To create a pool, navigate to the <a href="https://sudoswap.xyz/#/create">Create Pool</a> interface. Follow the steps below depending on the type of pool you want to create.</p>
+<p><img alt="" src="https://i.imgur.com/izZ9axI.jpg" /></p>
+<h2 id="trade-pool-buy-and-sell">Trade Pool (Buy and Sell)</h2>
 <ol>
-<li>Click on the deposit drop-down box and select ETH:</li>
+<li>On the <a href="https://sudoswap.xyz/#/create">Create Pool</a> interface, select an NFT collection in the top-left pane.</li>
+<li>Optionally, choose an ERC20 token the NFTs should trade against. By default, NFTs trade against ETH:</li>
 </ol>
-<p><img alt="" src="https://i.imgur.com/6efi1G4.jpg" /></p>
+<p><img alt="" src="https://i.imgur.com/00maWlD.jpg" /></p>
 <ol>
-<li>Click on the receive drop-down box and select the NFT collection you want to buy. If you don't see the collection you want to buy, paste the contract address into the search bar, click "Add", and then select the collection.</li>
-<li>Enter the start price you want to pay, choose the type of bonding curve, and enter your chosen delta. If you are only buying one item, choose either type of curve and enter any delta:</li>
+<li>Under the <em>Deposits</em> section, choose how much ETH/ERC20 token to deposit (based on how many NFTs you are willing to buy) and which of your NFTs to deposit to seed the pool:</li>
 </ol>
-<p><img alt="" src="https://i.imgur.com/kisv5Nx.jpg" /></p>
+<p><img alt="" src="https://i.imgur.com/4pN2MCA.jpg" /></p>
 <ol>
-<li>Type in how many NFTs you want to buy and click "Next Step &gt;".</li>
+<li>Under the <em>Strategy</em> section, choose a starting Sell price for the pool. The corresponding Buy price is automatically adjusted in the following steps.</li>
+<li>Adjust the percentage Fee which will be taken on every trade.</li>
+<li>Select a type of price curve from the dropdown box and adjust the curve parameter as desired.</li>
 </ol>
-<p><em>Note: The slider on the right hand side is only for visualization purposes and does not affect your pool.</em> </p>
+<p><em>For details about the price curves supported by sudoswap and their adjustable parameter(s), see <a href="/docs/index.md#bonding-curves">Bonding Curves</a>.</em></p>
+<p><img alt="" src="https://i.imgur.com/GeVtrcT.jpg" /></p>
 <ol>
-<li>Confirm the details of your pool are correct, click "Create Pool", and confirm the transaction in your wallet.</li>
+<li>Click "Create Pool" and confirm the approval and pool creation transactions in your wallet:</li>
 </ol>
-<h2 id="sell-nfts-for-eth">Sell NFTs for ETH</h2>
+<p><img alt="" src="https://i.imgur.com/M54MPDk.jpg" /></p>
+<h2 id="buy-only-pool">Buy-Only Pool</h2>
 <ol>
-<li>Click on the deposit drop-down box and select the NFT collection you want to sell:</li>
+<li>On the <a href="https://sudoswap.xyz/#/create">Create Pool</a> interface, select the Buy pool type in the top right-pane.</li>
 </ol>
-<p><img alt="" src="https://i.imgur.com/GxS58xM.jpg" /></p>
+<p><img alt="" src="https://i.imgur.com/Qjczvqn.jpg" /></p>
 <ol>
-<li>Click on the receive drop-down box and select ETH.</li>
-<li>Enter the start price you want to receive, choose the type of bonding curve, and enter your chosen delta. If you are only selling one item, choose either type of curve and enter any delta:</li>
-</ol>
-<p><img alt="" src="https://i.imgur.com/aJm6vlF.jpg" /></p>
-<ol>
-<li>Type in how many NFTs you want to sell and click "Next Step &gt;".</li>
-</ol>
-<p><em>Note: The slider on the right hand side is only for visualization purposes and does not affect your pool.</em> </p>
-<ol>
-<li>Confirm the details of your pool are correct and select the NFTs you want to deposit:</li>
-</ol>
-<p><img alt="" src="https://i.imgur.com/cafdBSw.jpg" /></p>
-<ol>
-<li>Click "Approve" and confirm the transaction in your wallet.</li>
-<li>Click "Create Pool" and confirm the transaction in your wallet.</li>
-</ol>
-<h2 id="trade-nfts-for-eth-buy-and-sell">Trade NFTs for ETH (Buy and Sell)</h2>
-<ol>
-<li>Click on the first drop-down box and select ETH:</li>
-</ol>
-<p><img alt="" src="https://i.imgur.com/R44JUUv.jpg" /></p>
-<ol>
-<li>Click on the second drop-down box and select the NFT collection you want to deposit.</li>
-<li>Enter the percentage fee you want to take on every trade that uses your pool.</li>
-<li>Enter the start price for the pool, choose the type of bonding curve, and enter your chosen delta:</li>
-</ol>
-<p><img alt="" src="https://i.imgur.com/LmxrDEu.jpg" /></p>
-<ol>
-<li>Type in how many NFTs you want to buy and sell and click "Next Step &gt;".</li>
-</ol>
-<p><em>Note: The sliders on the right hand side are only for visualization purposes and do not affect your pool.</em> </p>
-<ol>
-<li>Confirm the details of your pool are correct and select the NFTs you want to deposit.</li>
-<li>Click "Approve" and confirm the transaction in your wallet.</li>
-<li>Click "Create Pool" and confirm the transaction in your wallet.</li>
-</ol>
-<h2 id="other-ways-to-create-a-pool">Other Ways to Create a Pool</h2>
-<p>You can also create liquidity pools on sudoswap by making collection offers or listing your NFTs for sale.</p>
-<h3 id="collection-offers">Collection Offers</h3>
-<p>Another way to create a buy pool on sudoswap is by making a collection offer:</p>
-<ol>
-<li>Go to the collections page and select a collection.</li>
-<li>Click "Make Collection Offer" to open the offer manager window:</li>
-</ol>
-<p><img alt="" src="https://i.imgur.com/A64xnKN.jpg" /></p>
-<ol>
-<li>
-<p>Under "Start Price", enter your desired price. Optionally, if buying multiple NFTs, enter a "Price Decrease" by which the price of all remaining items will be decremented each time an item is sold.</p>
-</li>
-<li>
-<p>Click "Create Offer" and confirm the transaction in your wallet.</p>
+<li>Follow the same steps you would to create a Trade pool, as documented above. Notice that:<ul>
+<li>Under the <em>Deposits</em> section, you only choose how much ETH/ERC20 token to deposit (based on how many NFTs you are willing to buy) to seed the pool.</li>
+<li>Under the <em>Strategy</em> section, the starting price you choose is a Buy price.</li>
+</ul>
 </li>
 </ol>
-<h3 id="listing-nfts">Listing NFTs</h3>
-<p>Another way to create a sell pool on sudoswap is by listing NFTs for sale:</p>
+<h2 id="sell-only-pool">Sell-Only Pool</h2>
 <ol>
-<li>Navigate to the "Your NFTs" page on the top right.</li>
-<li>Select the NFTs you want to list and click "List NFTs" at the bottom of the page:</li>
+<li>On the <a href="https://sudoswap.xyz/#/create">Create Pool</a> interface, select the Sell pool type in the top right-pane:</li>
 </ol>
-<p><img alt="" src="https://i.imgur.com/J2HuZtz.jpg" /></p>
+<p><img alt="" src="https://i.imgur.com/jnvVNF3.jpg" /></p>
 <ol>
-<li>Under "Start Price", enter your desired price. Optionally, if listing multiple NFTs, enter a "Price Increase" by which the price of all remaining items will be incremented each time an item is sold:</li>
-</ol>
-<p><img alt="" src="https://i.imgur.com/lSxSUWC.jpg" /></p>
-<ol>
-<li>Click "List NFTs".</li>
-<li>Give sudoswap access to the NFTs by confirming the first transaction in your wallet.</li>
-<li>Finalize the listing by confirming the second transaction in your wallet.</li>
+<li>Follow the same steps you would to create a Trade pool, as documented above. Notice that:<ul>
+<li>Under the <em>Deposits</em> section, you only choose which of your NFTs to deposit to seed the pool.</li>
+<li>Under the <em>Strategy</em> section, the starting price you choose is a Sell price.</li>
+</ul>
+</li>
 </ol>
 <h2 id="managing-existing-pools">Managing Existing Pools</h2>
-<p>Once you've created a pool, you may wish to update its pricing and deposit or withdraw assets.</p>
+<p>Once you've created a pool, you may wish to update its pricing and deposit or withdraw assets. To see your pools, click on your address at the top-right of any page and click on <a href="https://sudoswap.xyz/#/pool">My Pools</a>.</p>
+<p><img alt="" src="https://i.imgur.com/V8SgMqD.jpg" /></p>
 <h3 id="updating-pricing">Updating Pricing</h3>
 <ol>
-<li>Navigate to the <a href="https://sudoswap.xyz/#/pool">Your Pools</a> tab at the top-right of the page"</li>
-</ol>
-<p><img alt="" src="https://i.imgur.com/E5O9cv8.jpg" /></p>
-<ol>
+<li>Navigate to the <a href="https://sudoswap.xyz/#/pool">My Pools</a> page.</li>
 <li>Click on the pool you want to change.</li>
-<li>Click on the "Edit" button at the top-right of the pool:</li>
+<li>Click on the "Edit Pool" button at the top-right of the page.</li>
+<li>Enter a new start price, delta, and or swap fee (only for Trade pools) for the pool:</li>
 </ol>
-<p><img alt="" src="https://i.imgur.com/yjSBGmv.jpg" /></p>
-<ol>
-<li>Enter a new start price and delta for the pool:</li>
-</ol>
-<p><img alt="" src="https://i.imgur.com/8mczlxE.jpg" /></p>
+<p><img alt="" src="https://i.imgur.com/UD0djFb.jpg" /></p>
 <ol>
 <li>Click "Update" and confirm the transaction in your wallet.</li>
 </ol>
-<p><em>Note: At this time it is not possible to convert a linear pool into an exponential pool or vice versa. To do this, you must withdraw your assets from the existing pool and create a new one.</em></p>
-<h3 id="depositing-nfts">Depositing NFTs</h3>
+<p><em>Note: It is not possible to change a pool's type (linear, exponential, etc). Instead, withdraw your assets from the existing pool and create a new one.</em></p>
+<h3 id="depositing-and-withdrawing">Depositing and Withdrawing</h3>
 <ol>
-<li>Navigate to the <a href="https://sudoswap.xyz/#/pool">Your Pools</a> tab at the top-right of the page.</li>
-<li>Click on the pool you want to deposit to.</li>
-<li>Click on the "Deposit" button at the top-left of the pool.</li>
-<li>Select the NFTs you want to deposit:</li>
-</ol>
-<p><img alt="" src="https://i.imgur.com/AvlHDZD.jpg" /></p>
-<ol>
-<li>Click "Deposit NFTs" and confirm the transaction in your wallet.</li>
-</ol>
-<h3 id="withdrawing-nfts">Withdrawing NFTs</h3>
-<ol>
-<li>Navigate to the <a href="https://sudoswap.xyz/#/pool">Your Pools</a> tab at the top-right of the page.</li>
-<li>Click on the pool you want to withdrawm from.</li>
-<li>Click on the "Withdraw" button at the top-left of the pool.</li>
-<li>Select the NFTs you want to withdraw:</li>
-</ol>
-<p><img alt="" src="https://i.imgur.com/ERzFkof.jpg" /></p>
-<ol>
-<li>Click "Withdraw NFTs" and confirm the transaction in your wallet.</li>
+<li>Navigate to the <a href="https://sudoswap.xyz/#/pool">My Pools</a> page.</li>
+<li>Click on the pool you want to deposit to or withdraw from.</li>
+<li>Click on the Deposit or Withdraw button in the Tokens or NFTs pane.<ul>
+<li>For tokens, simply enter an amount and click the Deposit or Withdraw button: <img alt="" src="https://i.imgur.com/EgplCSc.jpg" /></li>
+<li>For NFTs, select the NFTs you wish to deposit or withdraw and click the Deposit or Withdraw button: <img alt="" src="https://i.imgur.com/co01Dkg.jpg" /></li>
+</ul>
+</li>
 </ol>
               
             </div>
