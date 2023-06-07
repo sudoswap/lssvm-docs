@@ -32,9 +32,9 @@ To create a pool, navigate to the [Create Pool](https://sudoswap.xyz/#/create) i
 
 ## Managing Existing Pools
 
-Once you've created a pool, you may wish to update its pricing and deposit or withdraw assets. To see your pools, click on your address at the top-right of any page and click on [My Pools](https://sudoswap.xyz/#/pool).
+Once you've created a pool, you may wish to update its pricing and deposit or withdraw assets. To edit a pool, click on your address at the top-right of any page, click on [My Pools](https://sudoswap.xyz/#/pool), and select the pool.
 
-![](https://i.imgur.com/V8SgMqD.jpg)
+![](https://i.imgur.com/UzxHXRM.jpg)
 
 ### Updating Pricing
 

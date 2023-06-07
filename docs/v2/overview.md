@@ -4,7 +4,7 @@ sudoAMM v2 introduces four new major features for users and creators:
 
 * [**Royalty support**](royalties.md) for ERC2981-compliant collections, plus fallback royalty solutions
 * LP agreements called [**Settings**](settings.md) whereby creators can opt-in to waive royalties for eligible pools
-* On-chain [**property filtering**](properties.md) powered by bitmaps, Merkle trees, or tokenId ranges
+* On-chain [**property filtering**](properties.md) powered by Merkle trees, tokenId ranges, or custom smart contract logic
 * [**ERC1155 support**](erc1155.md)
 
 ## Minor Changes
