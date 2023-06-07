@@ -1,4 +1,4 @@
-site_name: sudoswap AMM Docs
+site_name: sudoswap docs
 nav:
   - What Is Sudoswap?: index.md
   - Sudoswap v2:
@@ -20,6 +20,7 @@ nav:
     - Swapping Across Pairs: reference/swapping.md 
     - Contract Addresses: reference/contracts.md
 theme: readthedocs
+extra_css: [extra.css]
 plugins:
     - search
     - redirects:
