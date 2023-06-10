@@ -37,9 +37,10 @@ h1, h2, h3 {
 }
 
 code {
-  background-color: #e0f24b !important;
-  font-weight: bolder;
-  color: black !important;
+  background-color: #22272e !important;
+  color: white !important;
+  border: none !important;
+  font-size: 15px !important;
 }
 
 a {
