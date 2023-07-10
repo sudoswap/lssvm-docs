@@ -17,7 +17,8 @@ nav:
   - Technical Reference:
     - Pair Creation : reference/pair-creation.md
     - Bonding Curves and Pricing: reference/pricing.md
-    - Swapping Across Pairs: reference/swapping.md 
+    - Swapping Across Pairs: reference/swapping.md
+    - Default Property Checkers: reference/property-checkers.md
     - Contract Addresses: reference/contracts.md
 theme: readthedocs
 extra_css: [extra.css]
