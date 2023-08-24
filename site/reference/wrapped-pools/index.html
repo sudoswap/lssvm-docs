@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Default Property Checkers - sudoswap docs</title>
+    <title>Wrapped Pools - sudoswap docs</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Default Property Checkers";
-        var mkdocs_page_input_path = "reference\\property-checkers.md";
+        var mkdocs_page_name = "Wrapped Pools";
+        var mkdocs_page_input_path = "reference\\wrapped-pools.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -82,23 +82,17 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../swapping/">Swapping Across Pairs</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Default Property Checkers</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../property-checkers/">Default Property Checkers</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Wrapped Pools</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#rangepropertychecker">RangePropertyChecker</a>
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#merklepropertychecker">MerklePropertyChecker</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#merkle-tree-construction">Merkle Tree Construction</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#security-note">Security Note</a>
+    <li class="toctree-l2"><a class="reference internal" href="#integrating-wrapped-pools">Integrating Wrapped Pools</a>
     </li>
-        </ul>
-    </li>
-        </ul>
+    <li class="toctree-l2"><a class="reference internal" href="#valuing-wrapped-pools">Valuing Wrapped Pools</a>
     </li>
     </ul>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../wrapped-pools/">Wrapped Pools</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../contracts/">Contract Addresses</a>
                   </li>
@@ -118,7 +112,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
           <li>Technical Reference &raquo;</li>
-      <li>Default Property Checkers</li>
+      <li>Wrapped Pools</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -127,35 +121,43 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="deploying-property-checkers">Deploying Property Checkers</h1>
-<p>The default Property Checkers introduced in sudoswap V2 can be cloned using the Property Checker Factory at <a href="https://etherscan.io/address/0x031b216fabec82310fea3426b33455609b99afc1">0x031b216FaBec82310FEa3426b33455609b99AfC1</a>. The contract has two write methods, one for deploying each type of Property Checker.</p>
-<p>Both types of default Property Checker conform to the <code>IPropertyChecker.sol</code> interface expected by pair contracts:</p>
-<pre><code class="language-sol">interface IPropertyChecker {
-    function hasProperties(uint256[] calldata ids, bytes calldata params) external returns(bool);
-}
-</code></pre>
-<h2 id="rangepropertychecker">RangePropertyChecker</h2>
-<p>A <code>RangePropertyChecker</code> can be deployed using the <code>createRangePropertyChecker</code> method. The method's two parameters <code>startInclusive</code> and <code>endInclusive</code> are tokenIds for which all tokenIds in [<code>startInclusive</code>, <code>endInclusive</code>] will be considered valid by the Property Checker.</p>
-<p>When interacting with a <code>RangePropertyChecker</code>, the optional bytes calldata parameter on the <code>hasProperties</code> method is not used.</p>
-<h2 id="merklepropertychecker">MerklePropertyChecker</h2>
-<p>A <code>MerklePropertyChecker</code> can be deployed using the <code>createMerklePropertyChecker</code> method. The method's one parameter is the  root of the Merkle tree of all tokenIds which should be considered valid by the Property Checker.</p>
-<p>When interacting with a <code>MerklePropertyChecker</code>, the bytes calldata parameter on the <code>hasProperties</code> method is used to pass an array of Merkle proofs for the tokenIds being verified. Individual proofs should be of type <code>bytes32[]</code> and should be encoded together as a single <code>bytes[]</code>.</p>
-<p>When interacting with a pair that implements a <code>MerklePropertyChecker</code>, traders must have access to Merkle proofs for relevant tokenIds through a frontend interface or otherwise.</p>
-<h3 id="merkle-tree-construction">Merkle Tree Construction</h3>
-<p><code>MerklePropertyChecker</code> implements OpenZeppelin's <code>MerkleProof.sol</code> contract to verify proofs. The hashing function used for both leaf and branch nodes is <code>keccak256(abi.encodePacked())</code>.</p>
-<p>To generate a compatible Merkle tree, you can use a JavaScript library like <a href="https://github.com/OpenZeppelin/merkle-tree">@openzeppelin/merkle-tree</a>. For this specific library, you must adjust the hashing function in <code>standard.ts</code> to match what is provided above.</p>
-<pre><code>function standardLeafHash&lt;T extends any[]&gt;(value: T, types: string[]): Bytes {
-  return keccak256(hexToBytes(defaultAbiCoder.encode(types, value)));
-}
-</code></pre>
-<h4 id="security-note">Security Note</h4>
-<p>OpenZeppelin advises against constructing Merkle trees with simple hashing functions like <code>keccak256(abi.encodePacked())</code> due to the risk of <a href="https://flawed.net.nz/2018/02/21/attacking-merkle-trees-with-a-second-preimage-attack/">second pre-image attacks</a>. However, <code>MerklePropertyChecker</code> is resistant to this type of attack because it is not possible to pass two concatenated <code>keccak256</code> hashes (totalling 64 bytes in length) as a <code>uint256</code> tokenId. Not to mention, most NFT contracts do not allow minting of specific tokenIds.</p>
+                <h1 id="wrapped-pools">Wrapped Pools</h1>
+<p>sudoswap pools can be wrapped as ERC721 NFTs using the wrapper contract deployed at <a href="https://etherscan.io/address/0x3767341a7519178f30281fc7D07538EDb55c05a4">0x3767341a7519178f30281fc7D07538EDb55c05a4</a>. This allows pools to be utilized within any NFT-compatible protocol, for purposes such as lending or fractionalization.</p>
+<p>At this time, the wrapper contract only supports ERC721&lt;&gt;ETH pools.</p>
+<h2 id="overview">Overview</h2>
+<p>To wrap a pool, the owner transfers the pool to the wrapper contract using the <code>transferOwnership</code> method on the pool contract:</p>
+<p><code>LSSVMPair.transferOwnership(0x3767341a7519178f30281fc7D07538EDb55c05a4,)</code></p>
+<p>Then, using the <code>onOwnershipTransferred</code> callback, the wrapper contract  mints an ERC721 NFT representing ownership of the wrapped pool to its original owner. The tokenId of the NFT is the contract address of the underlying pool casted to an unsigned integer:</p>
+<p><code>tokenId = uint256(uint160(pairAddress))</code></p>
+<p>The holder of a wrapper NFT has full and exclusive control over the underlying pool. Via the wrapper contract, they can:
+- change pool settings such as pricing using the <code>multicall</code> proxy method,
+-  unwrap the pool using the <code>reclaimPairs</code> method, which transfers them ownership of the pool and subsequently burns the NFT.</p>
+<h2 id="integrating-wrapped-pools">Integrating Wrapped Pools</h2>
+<p>Since wrapper NFTs conform to ERC721, they are natively compatible with most NFT protocols.</p>
+<p>To get information about an underlying pool, start by casting the NFT's tokenId back into the pool's address:</p>
+<p><code>pairAddress = address(uint160(tokenId))</code></p>
+<p>Then, read the views inherited from <a href="https://github.com/sudoswap/lssvm2/blob/main/src/LSSVMPair.sol"><code>LSSVMPair.sol</code></a> on that address to determine the pool's parameters:</p>
+<ul>
+<li><code>pairVariant()</code> (ETH or ERC20)</li>
+<li><code>bondingCurve()</code> (linear, exponential, etc)</li>
+<li><code>nft()</code> (contract address)</li>
+<li><code>poolType()</code> (BUY, SELL, or TRADE)</li>
+<li>and more.</li>
+</ul>
+<p>You can read a pool's ETH balance using the <code>balance</code> property. To determine the pool's NFT balance, call <code>balanceOf()</code> on the NFT contract itself.</p>
+<p>For ERC20 pairs, the <code>token()</code> view exposes the token's contract address. To determine ERC20 balance, call <code>balanceOf()</code> on the token contract.</p>
+<h2 id="valuing-wrapped-pools">Valuing Wrapped Pools</h2>
+<p>Valuing wrapped pools can be complex due to diverse pricing curves and the risk of manipulation. To mitigate this, we recommend protocols start by only integrating certain categories of sudoswap pools.</p>
+<p>For example, for a buy- or sell-only pool using a linear or exponential pricing curve, the total value of the pool can be estimated by multiplying its NFT balance by the NFT's floor price (as provided by an NFT valuation oracle of choice) and adding its ETH balance.</p>
+<p>Additionally, you should check the pool's pricing at the time of valuation is equal to the NFT's floor price or better:
+* Buy-only pools: <code>spotPrice</code> ≤ <code>floor</code>
+* Sell-only pools: <code>spoPrice</code> ≥ <code>floor</code></p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../swapping/" class="btn btn-neutral float-left" title="Swapping Across Pairs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../wrapped-pools/" class="btn btn-neutral float-right" title="Wrapped Pools">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../property-checkers/" class="btn btn-neutral float-left" title="Default Property Checkers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../contracts/" class="btn btn-neutral float-right" title="Contract Addresses">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -178,10 +180,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../swapping/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../property-checkers/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../wrapped-pools/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../contracts/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
