@@ -19,6 +19,7 @@ nav:
     - Bonding Curves and Pricing: reference/pricing.md
     - Swapping Across Pairs: reference/swapping.md
     - Default Property Checkers: reference/property-checkers.md
+    - Wrapped Pools: reference/wrapped-pools.md
     - Contract Addresses: reference/contracts.md
 theme: readthedocs
 extra_css: [extra.css]
