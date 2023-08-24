@@ -8,9 +8,7 @@ At this time, the wrapper contract only supports ERC721<>ETH pools.
 
 To wrap a pool, the owner transfers the pool to the wrapper contract using the `transferOwnership` method on the pool contract:
 
-```
-LSSVMPair.transferOwnership(0x3767341a7519178f30281fc7D07538EDb55c05a4,)
-```
+`LSSVMPair.transferOwnership(0x3767341a7519178f30281fc7D07538EDb55c05a4,)`
 
 Then, using the `onOwnershipTransferred` callback, the wrapper contract  mints an ERC721 NFT representing ownership of the wrapped pool to its original owner. The tokenId of the NFT is the contract address of the underlying pool casted to an unsigned integer:
 
