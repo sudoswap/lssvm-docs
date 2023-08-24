@@ -129,9 +129,11 @@
 <p><code>LSSVMPair.transferOwnership(0x3767341a7519178f30281fc7D07538EDb55c05a4,)</code></p>
 <p>Then, using the <code>onOwnershipTransferred</code> callback, the wrapper contract  mints an ERC721 NFT representing ownership of the wrapped pool to its original owner. The tokenId of the NFT is the contract address of the underlying pool casted to an unsigned integer:</p>
 <p><code>tokenId = uint256(uint160(pairAddress))</code></p>
-<p>The holder of a wrapper NFT has full and exclusive control over the underlying pool. Via the wrapper contract, they can:
-- change pool settings such as pricing using the <code>multicall</code> proxy method,
--  unwrap the pool using the <code>reclaimPairs</code> method, which transfers them ownership of the pool and subsequently burns the NFT.</p>
+<p>The holder of a wrapper NFT has full and exclusive control over the underlying pool. Via the wrapper contract, they can:</p>
+<ul>
+<li>change pool settings such as pricing using the <code>multicall</code> proxy method,</li>
+<li>unwrap the pool using the <code>reclaimPairs</code> method, which transfers them ownership of the pool and subsequently burns the NFT.</li>
+</ul>
 <h2 id="integrating-wrapped-pools">Integrating Wrapped Pools</h2>
 <p>Since wrapper NFTs conform to ERC721, they are natively compatible with most NFT protocols.</p>
 <p>To get information about an underlying pool, start by casting the NFT's tokenId back into the pool's address:</p>
@@ -149,9 +151,11 @@
 <h2 id="valuing-wrapped-pools">Valuing Wrapped Pools</h2>
 <p>Valuing wrapped pools can be complex due to diverse pricing curves and the risk of manipulation. To mitigate this, we recommend protocols start by only integrating certain categories of sudoswap pools.</p>
 <p>For example, for a buy- or sell-only pool using a linear or exponential pricing curve, the total value of the pool can be estimated by multiplying its NFT balance by the NFT's floor price (as provided by an NFT valuation oracle of choice) and adding its ETH balance.</p>
-<p>Additionally, you should check the pool's pricing at the time of valuation is equal to the NFT's floor price or better:
-* Buy-only pools: <code>spotPrice</code> ≤ <code>floor</code>
-* Sell-only pools: <code>spoPrice</code> ≥ <code>floor</code></p>
+<p>Additionally, you should check the pool's pricing at the time of valuation is equal to the NFT's floor price or better:</p>
+<ul>
+<li>Buy-only pools: <code>spotPrice</code> ≤ <code>floor</code></li>
+<li>Sell-only pools: <code>spoPrice</code> ≥ <code>floor</code></li>
+</ul>
               
             </div>
           </div><footer>
