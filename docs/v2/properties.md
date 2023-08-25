@@ -16,7 +16,7 @@ In order to leverage property checking, liquidity providers must specify a Prope
 
 ## Default Property Checkers
 
-sudoAMM v2 provides two default Property Checkers which can be cloned by users with custom parameters (immutables):
+sudoAMM v2 provides two default Property Checkers which can be cloned by users with custom parameters. For instructions on doing so, see [Cloning Property Checkers](../reference/property-checkers.md).
 
 ### RangePropertyChecker
 

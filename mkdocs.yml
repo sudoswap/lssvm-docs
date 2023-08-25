@@ -18,7 +18,7 @@ nav:
     - Pair Creation : reference/pair-creation.md
     - Bonding Curves and Pricing: reference/pricing.md
     - Swapping Across Pairs: reference/swapping.md
-    - Default Property Checkers: reference/property-checkers.md
+    - Cloning Property Checkers: reference/property-checkers.md
     - Wrapped Pools: reference/wrapped-pools.md
     - Contract Addresses: reference/contracts.md
 theme: readthedocs
