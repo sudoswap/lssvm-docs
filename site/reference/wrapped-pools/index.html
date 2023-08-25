@@ -82,13 +82,21 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../swapping/">Swapping Across Pairs</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../property-checkers/">Default Property Checkers</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../property-checkers/">Cloning Property Checkers</a>
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="./">Wrapped Pools</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#example">Example</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#integrating-wrapped-pools">Integrating Wrapped Pools</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#example_1">Example</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#valuing-wrapped-pools">Valuing Wrapped Pools</a>
     </li>
@@ -134,24 +142,51 @@
 <li>change pool settings such as pricing using the <code>multicall</code> proxy method,</li>
 <li>unwrap the pool using the <code>reclaimPairs</code> method, which transfers them ownership of the pool and subsequently burns the NFT.</li>
 </ul>
+<h3 id="example">Example</h3>
+<pre><code class="language-sol">WrappedSudoPool wrapper = WrappedSudoPool(0x3767341a7519178f30281fc7D07538EDb55c05a4);
+wrapper.reclaimPairs([LSSVMPair1,...]);
+</code></pre>
 <h2 id="integrating-wrapped-pools">Integrating Wrapped Pools</h2>
 <p>Since wrapper NFTs conform to ERC721, they are natively compatible with most NFT protocols.</p>
 <p>To get information about an underlying pool, start by casting the NFT's tokenId back into the pool's address:</p>
 <p><code>pairAddress = address(uint160(tokenId))</code></p>
 <p>Then, read the views inherited from <a href="https://github.com/sudoswap/lssvm2/blob/main/src/LSSVMPair.sol"><code>LSSVMPair.sol</code></a> on that address to determine the pool's parameters:</p>
 <ul>
-<li><code>pairVariant()</code> (ETH or ERC20)</li>
+<li><code>pairVariant()</code> (only <code>ETH</code> pools are supported by the wrapper)</li>
 <li><code>bondingCurve()</code> (linear, exponential, etc)</li>
 <li><code>nft()</code> (contract address)</li>
 <li><code>poolType()</code> (BUY, SELL, or TRADE)</li>
 <li>and more.</li>
 </ul>
 <p>You can read a pool's ETH balance using the <code>balance</code> property. To determine the pool's NFT balance, call <code>balanceOf()</code> on the NFT contract itself.</p>
-<p>For ERC20 pairs, the <code>token()</code> view exposes the token's contract address. To determine ERC20 balance, call <code>balanceOf()</code> on the token contract.</p>
+<h3 id="example_1">Example</h3>
+<pre><code class="language-sol">import { ILSSVMPair } from &quot;./ILSSVMPair.sol&quot;;
+
+contract Example {
+  function _handleNFT(address _tokenContract, uint256 _tokenId) internal {
+
+      // Check if NFT is a wrapped sudoswap pool
+      if (_tokenContract == 0x3767341a7519178f30281fc7D07538EDb55c05a4) {
+
+          // Get underlying pool
+          ILSSVMPair underlyingPair = ILSSVMPair(address(uint160(_tokenId)));
+
+          // Get information about pool
+          address nft = underlyingPair.nft(); // Underlying NFT contract
+          ILSSVMPair.PoolType type = underlyingPair.poolType(); // BUY, SELL, or TRADE
+          address curve = underlyingPair.bondingCurve(); // Address of bonding curve
+          uint256 balance = underlyingPair.balance; // ETH balance of pool
+
+          // Do desired logic
+          ...
+      } else {...}
+  }
+}
+</code></pre>
 <h2 id="valuing-wrapped-pools">Valuing Wrapped Pools</h2>
 <p>Valuing wrapped pools can be complex due to diverse pricing curves and the risk of manipulation. To mitigate this, we recommend protocols start by only integrating certain categories of sudoswap pools.</p>
 <p>For example, for a buy- or sell-only pool using a linear or exponential pricing curve, the total value of the pool can be estimated by multiplying its NFT balance by the NFT's floor price (as provided by an NFT valuation oracle of choice) and adding its ETH balance.</p>
-<p>Additionally, you should check the pool's pricing at the time of valuation is equal to the NFT's floor price or better:</p>
+<p>Additionally, you should check the pool's pricing at the time of valuation is equal to the NFT's floor price or better. For a linear or exponential pricing curve, this means:</p>
 <ul>
 <li>Buy-only pools: <code>spotPrice</code> ≤ <code>floor</code></li>
 <li>Sell-only pools: <code>spoPrice</code> ≥ <code>floor</code></li>
@@ -160,7 +195,7 @@
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../property-checkers/" class="btn btn-neutral float-left" title="Default Property Checkers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../property-checkers/" class="btn btn-neutral float-left" title="Cloning Property Checkers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../contracts/" class="btn btn-neutral float-right" title="Contract Addresses">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
