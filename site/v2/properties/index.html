@@ -92,7 +92,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/swapping/">Swapping Across Pairs</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../reference/property-checkers/">Default Property Checkers</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/property-checkers/">Cloning Property Checkers</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/wrapped-pools/">Wrapped Pools</a>
                   </li>
@@ -133,7 +133,7 @@
 <p>The interface's single method <code>hasProperties</code> takes an array of tokenIds and optional bytes calldata, returning true or false if the specified tokenIds meet the Property Checker's criteria. The optional bytes calldata can be used to pass additional information to the Property Checker, such as proof-of-inclusion in a Merkle tree.</p>
 <p>In order to leverage property checking, liquidity providers must specify a Property Checker when creating pools with the Pair Factory. The Property Checker that is specified for a pool at creation cannot be changed or removed.</p>
 <h2 id="default-property-checkers">Default Property Checkers</h2>
-<p>sudoAMM v2 provides two default Property Checkers which can be cloned by users with custom parameters (immutables):</p>
+<p>sudoAMM v2 provides two default Property Checkers which can be cloned by users with custom parameters. For instructions on doing so, see <a href="../../reference/property-checkers/">Cloning Property Checkers</a>.</p>
 <h3 id="rangepropertychecker">RangePropertyChecker</h3>
 <p><code>RangePropertyChecker</code> checks whether tokenIds passed to the <code>hasProperties</code> method lie within a <code>lowerBound</code> and <code>upperBound</code> specified when the contract was cloned.</p>
 <p>For this Property Checker, the optional bytes calldata is not used.</p>
