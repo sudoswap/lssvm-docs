@@ -44,8 +44,6 @@ Then, read the views inherited from [`LSSVMPair.sol`](https://github.com/sudoswa
 
 You can read a pool's ETH balance using the `balance` property. To determine the pool's NFT balance, call `balanceOf()` on the NFT contract itself.
 
-For ERC20 pairs, the `token()` view exposes the token's contract address. To determine ERC20 balance, call `balanceOf()` on the token contract.
-
 ### Example
 
 ``` sol
