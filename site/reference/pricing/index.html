@@ -80,15 +80,29 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="./">Bonding Curves and Pricing</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#linear-curve">Linear Curve</a>
+    <li class="toctree-l2"><a class="reference internal" href="#how-bonding-curves-work">How Bonding Curves Work</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#interpreting-spotprice-and-delta">Interpreting spotPrice and delta</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#exponential-curve">Exponential Curve</a>
+    <li class="toctree-l3"><a class="reference internal" href="#pricing-for-multi-swaps">Pricing For Multi-Swaps</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#xyk-curve">XYK Curve</a>
+        </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#understanding-spot-price">Understanding Spot Price</a>
+    <li class="toctree-l2"><a class="reference internal" href="#overview-of-bonding-curves">Overview of Bonding Curves</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#linear-curve">Linear Curve</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#pricing-for-multi-swaps">Pricing For Multi-Swaps</a>
+    <li class="toctree-l3"><a class="reference internal" href="#exponential-curve">Exponential Curve</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#xyk-curve">XYK Curve</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#gda-curve">GDA Curve</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#parsing-delta">Parsing delta</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
     </li>
     </ul>
                   </li>
@@ -126,40 +140,44 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="bonding-curves-and-pricing">Bonding Curves and Pricing</h1>
-<p>To determine pricing, each <code>LSSVMPair</code> is associated with a specific bonding curve set by the LP. At present, there are three choices: <code>LinearCurve</code>, <code>ExponentialCurve</code>, and <code>XYKCurve</code>. In the future, more bonding curve contracts may be whitelisted for use with <code>LSSVMPairFactory</code>.</p>
-<p>After a user trades with a pair, the pair consults its bonding curve to determine what its new price should be. </p>
-<p>Technical note: the bonding curves are intended to be pure, i.e. they do not modify the state of pairs that call them. The actual logic for input/output validation and price updating happens in the <code>LSSVMPair</code> contract itself. </p>
-<h3 id="linear-curve">Linear Curve</h3>
-<p>The linear curve performs an additive operation to update the price. <code>delta</code> is assumed to be set properly by the LP to be the same precision of the pair's underlying token.</p>
-<p>If the pair has just sold an NFT by giving out an NFT and receiving tokens, the next price it will quote to sell NFTs at will be <code>delta</code> more. Conversely, if the pair has just bought an NFT by giving out tokens and receiving an NFT, the next price it will quote to purchase NFTs at will be <code>delta</code> less. </p>
-<h3 id="exponential-curve">Exponential Curve</h3>
-<p>The exponential curve performs a multiplicative operation. <code>delta</code> is treated as a multiplier assuming a fixed point system where <code>1e18</code> is 1.</p>
-<p>For example, if <code>delta</code> is <code>1e18 + 1e17</code>, this represents a 10% change in price each time.</p>
-<p>If the pair has just sold an NFT by giving out an NFT and receiving tokens, the next price it will quote to sell NFTs at will be multiplicatively <code>delta</code> more. Conversely, if the pair has just bought an NFT by giving out tokens and receiving an NFT, the next price it will quote to purchase NFTs at will be multiplicatively <code>delta</code> less. </p>
-<h3 id="xyk-curve">XYK Curve</h3>
-<p>The XYK curve adjusts price such that the product (multiplication) of two virtual reserves remains constant after every trade. At pool creation,the virtual reserves are set as follows:</p>
+<p>sudoswap pairs use bonding curves to determine buy and sell prices. When creating a pair, liquidity providers choose from a list of whitelisted curves. A pair's bonding curve can be read using <code>bondingCurve()</code> and cannot be changed once the pair is created.</p>
+<p>sudoswap V2 currently has four whitelisted bonding curves:</p>
 <ul>
-<li><code>nftBalance</code>: the number of NFTs being bought or sold (in the case of trade pools, whichever is greater) <strong>plus one</strong></li>
-<li><code>tokenBalance</code>: the number of NFTs being bought or sold (or whichever is greater) multiplied by the start price</li>
+<li>LINEAR_CURVE_V2: <a href="https://etherscan.io/address/0xe5d78fec1a7f42d2f3620238c498f088a866fdc5">0xe5d78fec1a7f42d2F3620238C498F088A866FdC5</a></li>
+<li>EXPONENTIAL_CURVE_V2: <a href="https://etherscan.io/address/0xfa056c602ad0c0c4ee4385b3233f2cb06730334a">0xfa056C602aD0C0C4EE4385b3233f2Cb06730334a</a></li>
+<li>XYK_CURVE_V2: <a href="https://etherscan.io/address/0xc7fb91b6cd3c67e02ec08013cebb29b1241f3de5">0xc7fB91B6cd3C67E02EC08013CEBb29b1241f3De5</a></li>
+<li>GDA_CURVE_V2: <a href="https://etherscan.io/address/0x1fd5876d4a3860eb0159055a3b7cb79fdfff6b67">0x1fD5876d4A3860Eb0159055a3b7Cb79fdFFf6B67</a></li>
 </ul>
-<p>To conform to the <code>IPair</code> interface, <code>nftBalance</code> is stored as <code>delta</code> and <code>tokenBalance</code> is stored as <code>spotPrice</code>.</p>
-<p>The net price (exclusive of pool and protocol fees) for an XYK pair to sell <em>X</em> NFTs is <code>inputValueWithoutFee = (x * tokenBalance) / (nftBalance - x)</code>. Conversely, the net price for an XYK pair to buy <em>X</em> NFTs is <code>outputValueWithoutFee = (x * tokenBalance) / (nftBalance + x)</code>.</p>
-<p>Immediately after every trade, the virtual reserves are updated:</p>
-<ul>
-<li>Pair sells: <code>nftBalance = nftBalance - x</code> and <code>tokenBalance = tokenBalance + outputValueWithoutFee</code></li>
-<li>Pair buys: <code>nftBalance = nftBalance + x</code> and <code>tokenBalance = tokenBalance - outputValueWithoutFee</code></li>
-</ul>
-<h2 id="understanding-spot-price">Understanding Spot Price</h2>
-<p>In addition to modifying <code>delta</code> to change the pair's price reactivity, it is important to understand how the <code>spotPrice</code> variable in <code>LSSVMPair</code> behaves.</p>
-<p>The spot price refers to the instantaneous price of <em>selling</em> 1 NFT <em>to</em> the pair. The instantaneous price of <em>buying</em> 1 NFT <em>from</em> the pair is set to be the <code>spotPrice</code> adjusted upwards by 1 unit of <code>delta</code> with respect to the pair's bonding curve.</p>
-<p>For example, say that we have a Trade <code>LSSVMPair</code> for ETH  with a <code>spotPrice</code> of 1 ETH, and a linear curve with a <code>delta</code> of 0.1 ETH. (Assume <code>fee</code> is 0.) Then a user selling 1 NFT to the pair would receive 1 ETH, whereas a user purchasing 1 NFT from the pair would have to send (1 + 0.1) = 1.1 ETH.</p>
-<p>In other words, the price to purchase an NFT from a pair will always be <code>delta</code> greater (either additively on multiplicatively) than the price to sell an NFT to the pair.</p>
-<p>Pair managers who are manually adjusting <code>spotPrice</code> should keep this in mind.</p>
-<p>(Note that for simplicity, some examples in this documentation may use "spot price" to also refer to the instantaneous buy price.)</p>
-<h2 id="pricing-for-multi-swaps">Pricing For Multi-Swaps</h2>
-<p>If a user buys or sells multiple NFTs in one swap transaction, the <code>spotPrice</code> will update by <code>delta</code> for each NFT bought or sold. </p>
-<p>For example, say that we have a Trade <code>LSSVMPair</code> for ETH  with a <code>spotPrice</code> of 1 ETH, and a linear curve with a <code>delta</code> of 0.1 ETH. (Assume <code>fee</code> is 0.)</p>
-<p>If a user sells 5 NFTs to this pair, they will receive:</p>
+<h2 id="how-bonding-curves-work">How Bonding Curves Work</h2>
+<p>Bonding curves use pair state to determine the appropriate buy or sell price for a given number of NFTs. Specifically, they use a pair's <code>spotPrice</code> and <code>delta</code> to calculate net pricing (exclusive of fees) for <code>numItems</code> NFTs.</p>
+<p>Curves also calculate the sudoswap protocol fee and, for <code>TRADE</code> pools, the LP's chosen fee/spread.</p>
+<p>The relevant methods for this, <code>getBuyInfo</code> and <code>getSellInfo</code>, are defined in the <a href="https://github.com/sudoswap/lssvm2/blob/main/src/bonding-curves/ICurve.sol"><code>ICurve</code> interface</a>. Besides the name, the interface for both methods is identical:</p>
+<pre><code>    function getBuyInfo(
+        uint128 spotPrice,
+        uint128 delta,
+        uint256 numItems,
+        uint256 feeMultiplier,
+        uint256 protocolFeeMultiplier
+    )
+        external
+        view
+        returns (
+            CurveErrorCodes.Error error,
+            uint128 newSpotPrice,
+            uint128 newDelta,
+            uint256 inputValue,
+            uint256 tradeFee,
+            uint256 protocolFee
+        );
+</code></pre>
+<p>In addition to returning the net <code>inputValue</code> for a transaction and the relevant <code>tradeFee</code> and <code>protocolFee</code>, these bonding curve methods also return a <code>newSpotPrice</code> and <code>newDelta</code> which are used to adjust the pair's pricing.</p>
+<p>Note that bonding curves are intended to be pure: they do not modify pair state directly. Instead, pairs update their state themselves based on these return values.</p>
+<h3 id="interpreting-spotprice-and-delta">Interpreting <code>spotPrice</code> and <code>delta</code></h3>
+<p>In the original sudoswap bonding curves – the linear and exponential curves – <code>spotPrice</code> is the instantaneous price received when <em>selling</em> 1 NFT <em>to</em> the pair. For these curves, the instantaneous price paid when <em>buying</em> 1 NFT <em>from</em> the pair is the <code>spotPrice</code> adjusted upwards by 1 unit of <code>delta</code> (additively or multiplicatively).</p>
+<p>However, non-standard bonding curves like the XYK and GDA curves use pair state in different ways to enable unique pricing mechanisms. For these curves, <code>spotPrice</code> does not represent the price received when selling an NFT to the pair, and <code>delta</code> does not represent an additive or multiplcative modifier. As a result, users should use the <code>getBuyNFTQuote</code> and <code>getSellNFTQuote</code> methods on pairs themselves to get accurate pricing info.</p>
+<h3 id="pricing-for-multi-swaps">Pricing For Multi-Swaps</h3>
+<p>If a user buys or sells multiple NFTs in one transaction, the price for each NFT will be updated according to the bonding curve. For linear and exponential curves, this means the the <code>spotPrice</code> will update by <code>delta</code> (additively or multiplicatively) for each NFT bought or sold.</p>
+<p>For example, consider a pair with the linear bonding curve, with a <code>spotPrice</code> of 1 ETH and a <code>delta</code> of 0.1 ETH. If a user sells 5 NFTs to this pair, they will receive:</p>
 <ul>
 <li>1 ETH for the first NFT</li>
 <li>0.9 ETH for the second NFT</li>
@@ -168,6 +186,49 @@
 <li>0.6 ETH for the fifth NFT</li>
 </ul>
 <p>At the end of the multi-swap, the new <code>spotPrice</code> will be set to 0.5 ETH.</p>
+<p>For non-standard bonding curves, calculating the price of multi-swaps may be more complex; nevertheless, the price of each subsequent NFT is also adjusted according to the curve logic.</p>
+<h2 id="overview-of-bonding-curves">Overview of Bonding Curves</h2>
+<p>Here is an overview of how pair state is used to calculate pricing for each of the whitelisted bonding curves:</p>
+<h3 id="linear-curve">Linear Curve</h3>
+<p>The linear curve uses <code>spotPrice</code> to store the price received when selling an NFT to the pair. Following each transaction, the curve performs an additive operation of magnitude <code>delta</code> to update the price.</p>
+<p>For example, if a user buys an NFT from the pair, the <code>spotPrice</code> will be incremented by <code>delta</code>, and vice-versa.</p>
+<p><code>delta</code> is assumed to be set properly by the LP to be the same precision of the pair's underlying token.</p>
+<h3 id="exponential-curve">Exponential Curve</h3>
+<p>The exponential curve also uses <code>spotPrice</code> to store the price received when selling an NFT to the pair. Following each transaction, the curve performs a multiplicative operation of magnitude <code>delta</code> to update the price.</p>
+<p>For example, if a user buys an NFT from the pair, the <code>spotPrice</code> will be multiplied by <code>delta</code>, and vice-versa.</p>
+<p><code>delta</code> is a multiplier assuming a fixed point system where <code>1e18</code> is 1. For example, if <code>delta</code> is <code>1e18 + 1e17</code>, this represents a 10% change in price each time.</p>
+<h3 id="xyk-curve">XYK Curve</h3>
+<p>The XYK curve uses <code>spotPrice</code> and <code>delta</code> in a non-standard way: to store two virtual reserves. Following each transaction, price adjusts such that the product (multiplication) of the virtual reserves remains constant after every trade.</p>
+<p>At pool creation, the reserves are set as follows:</p>
+<ul>
+<li><code>nftBalance</code> (stored as <code>delta</code>): the number of NFTs being bought or sold (in the case of trade pools, whichever is greater) <strong>plus one</strong></li>
+<li><code>tokenBalance</code> (stored as <code>spotPrice</code>): the number of NFTs being bought or sold (or whichever is greater) multiplied by the start price</li>
+</ul>
+<p>The net price exclusive of fees for a user to buy <em>x</em> NFTs is <code>inputValueWithoutFee = (x * tokenBalance) / (nftBalance - x)</code>. Conversely, the net price for a user to sell <em>x</em> NFTs is <code>outputValueWithoutFee = (x * tokenBalance) / (nftBalance + x)</code>.</p>
+<p>Immediately after every trade, the pair state is updated:</p>
+<ul>
+<li>Pair sells: <code>delta = delta - x</code> and <code>spotPrice = spotPrice + outputValueWithoutFee</code></li>
+<li>Pair buys: <code>delta = delta + x</code> and <code>spotPrice = spotPrice - outputValueWithoutFee</code></li>
+</ul>
+<h3 id="gda-curve">GDA Curve</h3>
+<p>The GDA curve also uses <code>spotPrice</code> and <code>delta</code> in a non-standard way. It is an implementation of the <a href="https://www.paradigm.xyz/2022/04/gda#discrete-gda">discrete gradual Dutch auction</a>, where <code>spotPrice</code> is the price of the currently "auctioned" NFT <em>irrespective</em> of time decay, and <code>delta</code> stores the auction parameters <code>alpha</code> and <code>lamba</code>, as well as the timestamp of the last trade <code>prevTime</code>.</p>
+<p>In contrast to the specification linked above, the GDA curve calculates the price of each item as a function of the last. The net price exclusive of fees for a user to buy <em>x</em> NFTs is <code>inputValue_ = (spotPrice * (alpha^x - 1)) / ((alpha - 1) * 2^(lambda * timeElapsed))</code> where <code>timeElapsed</code> is the time elapsed since the last NFT was sold.</p>
+<p>Conversely, the net price for a user to sell <em>x</em> NFTs is <code>outputValue_ = (spotPrice * 2^(lambda * timeElapsed) * (alpha^x - 1)) / (alpha^(x - 1) * (alpha - 1))</code> where <code>timeElapsed</code> is the time elapsed since the last NFT was sold.</p>
+<p>Immediately after every trade, the pair state is updated:</p>
+<ul>
+<li>Pair sells: <code>spotPrice = (spotPrice * alpha^x) / 2^(lambda * timeElapsed)</code></li>
+<li>Pair buys: <code>spotPrice = (spotPrice * 2^(lambda * timeElapsed)) / alpha^x</code></li>
+</ul>
+<p>In both cases, <code>delta</code> is also updated to reflect the current <code>block.timestamp</code>.</p>
+<h4 id="parsing-delta">Parsing <code>delta</code></h4>
+<p>The GDA curve stores three values in <code>delta</code>. They are the auction parameters <code>alpha</code> and <code>lamba</code>, as well as the timestamp of the last trade <code>prevTime</code>.</p>
+<p>Since <code>delta</code> is of type <code>uint128</code>, this is achieved as follows:</p>
+<ul>
+<li>The highest 40 bits represent <code>alpha</code> with 9 decimals of precision.</li>
+<li>The middle 40 bits represent <code>lambda</code> with 9 decimals of precision.</li>
+<li>The lowest 48 bits represent the timestamp of the last trade <code>prevTime</code>.</li>
+</ul>
+<p>For a given auction, <code>alpha</code> and <code>lambda</code> are constants, while <code>prevTime</code> (and thus <code>delta</code> as a whole) must be updated immediately after every trade.</p>
               
             </div>
           </div><footer>
