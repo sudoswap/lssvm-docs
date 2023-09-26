@@ -152,7 +152,7 @@
 <p>Bonding curves use pair state to determine the appropriate buy or sell price for a given number of NFTs. Specifically, they use a pair's <code>spotPrice</code> and <code>delta</code> to calculate net pricing (exclusive of fees) for <code>numItems</code> NFTs.</p>
 <p>Curves also calculate the sudoswap protocol fee and, for <code>TRADE</code> pools, the LP's chosen fee/spread.</p>
 <p>The relevant methods for this, <code>getBuyInfo</code> and <code>getSellInfo</code>, are defined in the <a href="https://github.com/sudoswap/lssvm2/blob/main/src/bonding-curves/ICurve.sol"><code>ICurve</code> interface</a>. Besides the name, the interface for both methods is identical:</p>
-<pre><code>    function getBuyInfo(
+<pre><code class="language-sol">    function getBuyInfo(
         uint128 spotPrice,
         uint128 delta,
         uint256 numItems,

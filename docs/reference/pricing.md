@@ -17,7 +17,7 @@ Curves also calculate the sudoswap protocol fee and, for `TRADE` pools, the LP's
 
 The relevant methods for this, `getBuyInfo` and `getSellInfo`, are defined in the [`ICurve` interface](https://github.com/sudoswap/lssvm2/blob/main/src/bonding-curves/ICurve.sol). Besides the name, the interface for both methods is identical:
 
-```
+``` sol
     function getBuyInfo(
         uint128 spotPrice,
         uint128 delta,
