@@ -2,6 +2,26 @@
 
 This page contains some of the most frequently asked questions among sudoswap users.
 
+### How are fees calculated?
+
+Fees are calculated as a percentage of the net buy or sell price, after bonding curve logic has been applied to the spot price. Prices shown on the sudoswap frontend are the *final* amounts that a user pays (when buying an NFT) or receives (when selling an NFT) after fees have been accounted for.
+
+**Example:**
+
+- Spot Price: 0.9 ETH
+- Delta: 0.1 ETH
+- Net Buy Price: 1.0 ETH
+- 5% Creator Royalty: 0.05 ETH
+- 5% Trade Fee: 0.05 ETH
+- 0.5% Protocol Fee: 0.005 ETH
+- Buyer Pays: 1.105 ETH
+
+### Why did I receive no trade fee / double the trade fee?
+
+Users are always charged the exact trade fee when buying or selling an NFT. However, to optimize for gas usage, the trade fee remains in the pool (instead of being sent to the fee recipient) when an NFT is sold into a pool.
+
+To compensate for this, double the trade fee is sent to the fee recipient when an NFT is bought from a pool, ensuring fees accrue to the fee recipient in the long term. This amount consists of the fee itself (as paid by the user) and an equal amount deducted from the proceeds of the trade, which would otherwise remain in the pool.
+
 ### Can I withdraw airdropped tokens from my pool?
 
 Yes. At any time, you can withdraw any ERC20, ERC721, or ERC1155 tokens from your liqudity pools using the "Withdraw Other Tokens" feature on the pool's page. Note that you can only withdraw tokens from pools you have created.

@@ -64,8 +64,14 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../creating-a-pool/">Creating a Liquidity Pool</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../creating-an-auction/">Creating an Auction</a>
+                  </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="./">Frequently Asked Questions (FAQ)</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#how-are-fees-calculated">How are fees calculated?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#why-did-i-receive-no-trade-fee-double-the-trade-fee">Why did I receive no trade fee / double the trade fee?</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#can-i-withdraw-airdropped-tokens-from-my-pool">Can I withdraw airdropped tokens from my pool?</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#whats-the-difference-between-selling-and-listing">What's the difference between selling and listing?</a>
@@ -127,6 +133,21 @@
               
                 <h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
 <p>This page contains some of the most frequently asked questions among sudoswap users.</p>
+<h3 id="how-are-fees-calculated">How are fees calculated?</h3>
+<p>Fees are calculated as a percentage of the net buy or sell price, after bonding curve logic has been applied to the spot price. Prices shown on the sudoswap frontend are the <em>final</em> amounts that a user pays (when buying an NFT) or receives (when selling an NFT) after fees have been accounted for.</p>
+<p><strong>Example:</strong></p>
+<ul>
+<li>Spot Price: 0.9 ETH</li>
+<li>Delta: 0.1 ETH</li>
+<li>Net Buy Price: 1.0 ETH</li>
+<li>5% Creator Royalty: 0.05 ETH</li>
+<li>5% Trade Fee: 0.05 ETH</li>
+<li>0.5% Protocol Fee: 0.005 ETH</li>
+<li>Buyer Pays: 1.105 ETH</li>
+</ul>
+<h3 id="why-did-i-receive-no-trade-fee-double-the-trade-fee">Why did I receive no trade fee / double the trade fee?</h3>
+<p>Users are always charged the exact trade fee when buying or selling an NFT. However, to optimize for gas usage, the trade fee remains in the pool (instead of being sent to the fee recipient) when an NFT is sold into a pool.</p>
+<p>To compensate for this, double the trade fee is sent to the fee recipient when an NFT is bought from a pool, ensuring fees accrue to the fee recipient in the long term. This amount consists of the fee itself (as paid by the user) and an equal amount deducted from the proceeds of the trade, which would otherwise remain in the pool.</p>
 <h3 id="can-i-withdraw-airdropped-tokens-from-my-pool">Can I withdraw airdropped tokens from my pool?</h3>
 <p>Yes. At any time, you can withdraw any ERC20, ERC721, or ERC1155 tokens from your liqudity pools using the "Withdraw Other Tokens" feature on the pool's page. Note that you can only withdraw tokens from pools you have created.</p>
 <h3 id="whats-the-difference-between-selling-and-listing">What's the difference between selling and listing?</h3>
@@ -143,7 +164,7 @@
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../creating-a-pool/" class="btn btn-neutral float-left" title="Creating a Liquidity Pool"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../creating-an-auction/" class="btn btn-neutral float-left" title="Creating an Auction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../../managing-collections/listing/" class="btn btn-neutral float-right" title="Launching on Sudoswap">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -167,7 +188,7 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../creating-a-pool/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../creating-an-auction/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../../managing-collections/listing/" style="color: #fcfcfc">Next &raquo;</a></span>
