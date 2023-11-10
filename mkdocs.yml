@@ -10,6 +10,7 @@ nav:
   - User Guide:
     - Buying and Selling NFTs: user-guide/buying-and-selling.md
     - Creating a Liquidity Pool: user-guide/creating-a-pool.md
+    - Creating an Auction: user-guide/creating-an-auction.md
     - Frequently Asked Questions (FAQ): user-guide/faq.md
   - Managing Collections:
     - Launching on Sudoswap: managing-collections/listing.md

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>ERC1155 NFTs - sudoswap docs</title>
+    <title>Creating an Auction - sudoswap docs</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "ERC1155 NFTs";
-        var mkdocs_page_input_path = "v2\\erc1155.md";
+        var mkdocs_page_name = "Creating an Auction";
+        var mkdocs_page_input_path = "user-guide\\creating-an-auction.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -46,31 +46,31 @@
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Sudoswap v2</span></p>
-              <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../v2/overview/">Overview</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../royalties/">Royalties</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../v2/royalties/">Royalties</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../settings/">Settings</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../v2/settings/">Settings</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../properties/">Property Checking</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../v2/properties/">Property Checking</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">ERC1155 NFTs</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#factory-and-router-support">Factory and Router Support</a>
-    </li>
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../v2/erc1155/">ERC1155 NFTs</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">User Guide</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../user-guide/buying-and-selling/">Buying and Selling NFTs</a>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../buying-and-selling/">Buying and Selling NFTs</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../user-guide/creating-a-pool/">Creating a Liquidity Pool</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../creating-a-pool/">Creating a Liquidity Pool</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../user-guide/creating-an-auction/">Creating an Auction</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Creating an Auction</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#managing-existing-pools">Managing Existing Pools</a>
+    </li>
+    </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../user-guide/faq/">Frequently Asked Questions (FAQ)</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions (FAQ)</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Managing Collections</span></p>
@@ -109,8 +109,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-          <li>Sudoswap v2 &raquo;</li>
-      <li>ERC1155 NFTs</li>
+          <li>User Guide &raquo;</li>
+      <li>Creating an Auction</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -119,18 +119,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="erc1155-support">ERC1155 Support</h1>
-<p>sudoAMM v2 adds support for ERC1155 NFT pairs against both ETH and ERC20 tokens. The design of ERC1155 pairs is similar to that of ERC721 pairs, with the key difference being that ERC1155 pairs must specify a single NFT ID that can be traded by the pair.</p>
-<p>The NFT ID permitted to trade must be provided when the pair is created, after which it cannot be changed.</p>
-<h2 id="factory-and-router-support">Factory and Router Support</h2>
-<p>ERC1155 pairs are created with dedicated methods on the <code>LSSVMPairFactory</code>: <code>createPairERC1155ETH</code> and <code>createPairERC1155ERC20</code>.</p>
-<p>There are no dedicated methods for ERC1155 pairs on the routers as they are fully compatible with the generic methods.</p>
+                <h1 id="creating-an-auction">Creating an Auction</h1>
+<p>Auctions are a type of sudoswap pool that use the <a href="../../reference/pricing/#gda-curve">gradual Dutch auction</a> (GDA) or related bonding curves. Anyone can create an auction to buy or sell NFTs on sudoswap.</p>
+<p>To create an auction, navigate to the <a href="https://sudoswap.xyz/#/auction/create">Create Auction</a> interface. Then, follow the steps below.</p>
+<ol>
+<li>On the <a href="https://sudoswap.xyz/#/auction/create">Create Auction</a> interface, select an NFT collection in the top pane: <img alt="" src="https://i.imgur.com/n7rePKc.jpg" /></li>
+<li>Choose whether you want to buy or sell NFTs.</li>
+<li>Optionally, choose an ERC20 token the NFTs should trade against. By default, NFTs trade against ETH.</li>
+<li>Enter a starting price for the auction and select the auction speed: <img alt="" src="https://i.imgur.com/RO3LM1X.jpg" /></li>
+<li>Enter the total amount you wish to spend or select the NFTs you wish to auction: <img alt="" src="https://i.imgur.com/deBsnkD.jpg" /></li>
+<li>Click "Create Auction" and confirm the approval and pool creation transactions in your wallet.</li>
+</ol>
+<h2 id="managing-existing-pools">Managing Existing Pools</h2>
+<p>You can <a href="../creating-a-pool/#depositing-and-withdrawing">deposit and withdraw</a> from auctions as you would for any other sudoswap pool.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../properties/" class="btn btn-neutral float-left" title="Property Checking"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../../user-guide/buying-and-selling/" class="btn btn-neutral float-right" title="Buying and Selling NFTs">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../creating-a-pool/" class="btn btn-neutral float-left" title="Creating a Liquidity Pool"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../faq/" class="btn btn-neutral float-right" title="Frequently Asked Questions (FAQ)">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -153,10 +160,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../properties/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../creating-a-pool/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../../user-guide/buying-and-selling/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../faq/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
